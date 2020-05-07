@@ -1,0 +1,159 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<head>
+    <title th:fragment="title">Chess v1.0</title>
+</head>
+<body>
+<!--/* Main page (index) */-->
+<div th:fragment="content">
+    <h1 class="text-center">Welcome to Chess</h1>
+
+    <div class="flex-container">
+        <table id="board">
+            <tr class="line">
+                <td class="cell odd ui-droppable">
+                    <div class="figure black rook ui-draggable" style="position: relative;">♜</div>
+                </td>
+                <td class="cell even ui-droppable">
+                    <div class="figure black knight ui-draggable" style="position: relative;">♞</div>
+                </td>
+                <td class="cell odd ui-droppable">
+                    <div class="figure black bishop ui-draggable" style="position: relative;">♝</div>
+                </td>
+                <td class="cell even ui-droppable">
+                    <div class="figure black queen ui-draggable" style="position: relative;">♛</div>
+                </td>
+                <td class="cell odd ui-droppable">
+                    <div class="figure black king ui-draggable" style="position: relative;">♚</div>
+                </td>
+                <td class="cell even ui-droppable">
+                    <div class="figure black bishop ui-draggable" style="position: relative;">♝</div>
+                </td>
+                <td class="cell odd ui-droppable">
+                    <div class="figure black knight ui-draggable" style="position: relative;">♞</div>
+                </td>
+                <td class="cell even ui-droppable">
+                    <div class="figure black rook ui-draggable" style="position: relative;">♜</div>
+                </td>
+            </tr>
+            <tr class="line">
+                <td class="cell even ui-droppable">
+                    <div class="figure black pawn ui-draggable" style="position: relative;">♟</div>
+                </td>
+                <td class="cell odd ui-droppable">
+                    <div class="figure black pawn ui-draggable" style="position: relative;">♟</div>
+                </td>
+                <td class="cell even ui-droppable">
+                    <div class="figure black pawn ui-draggable" style="position: relative;">♟</div>
+                </td>
+                <td class="cell odd ui-droppable">
+                    <div class="figure black pawn ui-draggable" style="position: relative;">♟</div>
+                </td>
+                <td class="cell even ui-droppable">
+                    <div class="figure black pawn ui-draggable" style="position: relative;">♟</div>
+                </td>
+                <td class="cell odd ui-droppable">
+                    <div class="figure black pawn ui-draggable" style="position: relative;">♟</div>
+                </td>
+                <td class="cell even ui-droppable">
+                    <div class="figure black pawn ui-draggable" style="position: relative;">♟</div>
+                </td>
+                <td class="cell odd ui-droppable">
+                    <div class="figure black pawn ui-draggable" style="position: relative;">♟</div>
+                </td>
+            </tr>
+            <tr class="line">
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+            </tr>
+            <tr class="line">
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+            </tr>
+            <tr class="line">
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+            </tr>
+            <tr class="line">
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+                <td class="cell even ui-droppable"></td>
+                <td class="cell odd ui-droppable"></td>
+            </tr>
+            <tr class="line">
+                <td class="cell odd ui-droppable available">
+                    <div class="figure white pawn ui-draggable" style="position: relative;">♙</div>
+                </td>
+                <td class="cell even ui-droppable available">
+                    <div class="figure white pawn ui-draggable" style="position: relative;">♙</div>
+                </td>
+                <td class="cell odd ui-droppable available">
+                    <div class="figure white pawn ui-draggable" style="position: relative;">♙</div>
+                </td>
+                <td class="cell even ui-droppable available">
+                    <div class="figure white pawn ui-draggable" style="position: relative;">♙</div>
+                </td>
+                <td class="cell odd ui-droppable available">
+                    <div class="figure white pawn ui-draggable" style="position: relative;">♙</div>
+                </td>
+                <td class="cell even ui-droppable available">
+                    <div class="figure white pawn ui-draggable" style="position: relative;">♙</div>
+                </td>
+                <td class="cell odd ui-droppable available">
+                    <div class="figure white pawn ui-draggable" style="position: relative;">♙</div>
+                </td>
+                <td class="cell even ui-droppable available">
+                    <div class="figure white pawn ui-draggable" style="position: relative;">♙</div>
+                </td>
+            </tr>
+            <tr class="line">
+                <td class="cell even ui-droppable available">
+                    <div class="figure white rook ui-draggable" style="position: relative;">♖</div>
+                </td>
+                <td class="cell odd ui-droppable available">
+                    <div class="figure white knight ui-draggable" style="position: relative;">♘</div>
+                </td>
+                <td class="cell even ui-droppable available">
+                    <div class="figure white bishop ui-draggable" style="position: relative;">♗</div>
+                </td>
+                <td class="cell odd ui-droppable available">
+                    <div class="figure white queen ui-draggable" style="position: relative;">♕</div>
+                </td>
+                <td class="cell even ui-droppable available">
+                    <div class="figure white king ui-draggable" style="position: relative;">♔</div>
+                </td>
+                <td class="cell odd ui-droppable available">
+                    <div class="figure white bishop ui-draggable" style="position: relative;">♗</div>
+                </td>
+                <td class="cell even ui-droppable available">
+                    <div class="figure white knight ui-draggable" style="position: relative;">♘</div>
+                </td>
+                <td class="cell odd ui-droppable available">
+                    <div class="figure white rook ui-draggable" style="position: relative;">♖</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
