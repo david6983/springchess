@@ -5,4 +5,4 @@ services:
   - postgresql
 
 before_script:
-  - psql -c 'create database springchess; create role springchess with login password \'springchess\'; alter user springchess createdb;' -U postgres
+  - psql -c 'create database springchess;' -U postgres

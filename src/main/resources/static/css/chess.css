@@ -1,14 +1,14 @@
 #board {
     border: 2px solid black;
-    width: 62%;
-    margin-left: 19%;
-    margin-right: 19%;
+    width: 54%;
+    margin-left: 23%;
+    margin-right: 23%;
     margin-top: 2rem;
     box-shadow: #080500 2px -2px 3px 0px;
 }
 
 .cell {
-    height: 85px;
+    height: 70px;
 }
 
 .cell.even {
@@ -59,11 +59,17 @@
 
 @media only screen and (max-width: 1200px) {
     .cell {
-        height: 73px;
+        height: 65px;
     }
 
     .figure {
-        font-size: 52px;
+        font-size: 54px;
+    }
+
+    #board {
+        width: 58%;
+        margin-left: 21%;
+        margin-right: 21%;
     }
 }
 
@@ -75,14 +81,25 @@
     .figure {
         font-size: 42px;
     }
+
+    #board {
+        width: 64%;
+        margin-left: 18%;
+        margin-right: 18%;
+    }
 }
 
 @media only screen and (max-width: 767px) {
     .cell {
-        height: 35px;
+        height: 44px;
     }
 
     .figure {
-        font-size: 32px;
+        font-size: 44px;
+    }
+
+    #board {
+        width: 77%;
+        margin-left: 9%;
     }
 }
