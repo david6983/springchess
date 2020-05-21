@@ -8,12 +8,25 @@ board.find('.figure')
         containment: board
     })
     .on('dragstart', (ev, ui) => {
-        console.log("get the figure code")
+
+    })
+    .on("dragover", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $(this).addClass('dragging');
+    })
+    .on("dragleave", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        $(this).removeClass('dragging');
     })
     .on('dragstop', (ev, ui) => {
-        console.log("get the target coords and send json serialized data to server with ajax for verificaton")
-        console.log("when the response is ready, do the corresponding ui task")
+
     })
     .on('drop', (ev, ui) => {
-        console.log("drop")
+        ev.preventDefault();
+        ev.stopPropagation()
+        console.log("dropped");
+        console.log(ev.target);
     });
+//https://codepen.io/Sulzh/pen/gmmjpQ
