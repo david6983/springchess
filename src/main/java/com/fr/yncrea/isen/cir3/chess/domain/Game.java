@@ -8,6 +8,8 @@ import java.util.List;
 public class Game {
     public static final int NUMBER_OF_PLAYER_IN_GAME = 2;
 
+    public static final int START_PLAYER = PlayerName.WHITE.ordinal();
+
     public static final List<String> FIGURES_PLACEMENT = Arrays.asList(
             "rook",
             "knight",
@@ -33,6 +35,9 @@ public class Game {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "game")
     private List<Figure> grid;
 
+    @Column(nullable = false)
+    private Integer currentPlayer = START_PLAYER;
+
     public Long getId() {
         return id;
     }
@@ -47,6 +52,18 @@ public class Game {
 
     public void setGrid(List<Figure> grid) {
         this.grid = grid;
+    }
+
+    public int getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(int currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void changePlayer() {
+        this.currentPlayer = 1 - this.currentPlayer;
     }
 
     public Figure getFigureAt(int x, int y) {
