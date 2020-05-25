@@ -76,10 +76,10 @@ public class GameController {
 
     @GetMapping("/move/{gameId}/{pawnId}/{x}/{y}")
     public String moveOnVoidCell(final Model model,
-                       @PathVariable final Long gameId,
-                       @PathVariable final Long pawnId,
-                       @PathVariable final Integer x,
-                       @PathVariable final Integer y
+                                 @PathVariable final Long gameId,
+                                 @PathVariable final Long pawnId,
+                                 @PathVariable final Integer x,
+                                 @PathVariable final Integer y
     ) {
         Optional<Game> game = games.findById(gameId);
         if (game.isPresent()) {
@@ -111,7 +111,7 @@ public class GameController {
 
     @GetMapping("/move/{id}/{id}")
     public String moveOnAnyPawn(final Model model,
-                                 @PathVariable final Long id
+                                @PathVariable final Long id
     ) {
         Optional<Game> game = games.findById(id);
         if (game.isPresent()) {
@@ -121,4 +121,24 @@ public class GameController {
         logger.info("game {} not found for route /play/{}", id, id);
         return INDEX_REDIRECTION;
     }
+
+    @GetMapping("/delete/{gameId}/{pawnId}")
+    public String delete(final Model model,
+                         @PathVariable final Long gameId,
+                         @PathVariable final Long pawnId
+    ) {
+        Optional<Game> game = games.findById(gameId);
+        if (game.isPresent()) {
+            // change the coordinate of the moved pawn to the new position
+            Figure f = figures.getOne(pawnId);
+            f.setKilled(1);
+            figures.save(f);
+            logger.info("figure killed");
+            Game g = game.get();
+            return GAME_REDIRECTION + game.get().getId();
+        }
+        logger.info("Figure not deleted, please correct it");
+        return INDEX_REDIRECTION;
+    }
+
 }

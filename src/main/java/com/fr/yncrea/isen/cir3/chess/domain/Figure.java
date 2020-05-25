@@ -24,6 +24,9 @@ public class Figure {
     int y;
 
     @Column
+    int killed;
+
+    @Column
     String name;
 
     @Column
@@ -54,6 +57,14 @@ public class Figure {
 
     public void setX(int x) {
         this.x = x;
+    }
+
+    public int getKilled() {
+        return killed;
+    }
+
+    public void setKilled(int killed) {
+        this.killed = killed;
     }
 
     public int getY() {
@@ -87,6 +98,7 @@ public class Figure {
     public void setGame(Game game) {
         this.game = game;
     }
+
 
     public String getHtmlCode() {
         String htmlCode = CODE_PREFIX + (CODE_NUMBER + code) + ";";

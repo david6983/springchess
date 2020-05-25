@@ -68,43 +68,56 @@ $(function () {
         drop: function (event, ui) {
             let dropped = ui.draggable;
             let droppedOn = $(this);
+
+            let ID_game = $(location).attr('href'); // Current URL
+            ID_game = ID_game.split('/'); // It's case n°5 => http://localhost:8080/game/ID
+            // or  URL = URL.substring(32);
+            let URL_DELETE;
+            if ($(this).attr('class').indexOf('disabled') > 0) { // If cell is not empty
+                // Create link to delete
+                URL_DELETE = '/game/delete/' + ID_game[5] + '/' + $(this).children().attr('data-id');
+                // Delete the piece of the screen
+                $(this).children().remove();
+                // Delete the piece in the database
+                $.ajax({
+                    url: URL_DELETE, success: function (result) {
+                        console.log("Piece killed");
+                    }
+                });
+            }
+
+
             $(droppedOn).css("background-color", "");
-            $(droppedOn).droppable("disable");
+            // $(droppedOn).droppable("disable");
+            $(this).addClass('disabled');
+            $(dropped).parent().removeClass('disabled');
             $(dropped).parent().droppable("enable");
             $(dropped).detach().css({top: 0, left: 0}).appendTo(droppedOn);
 
             /* CREATE LINK TO UPDATE POSITION OF A PIECE */
-            let URL = $(location).attr('href');
-            URL = URL.split('/');
-            // URL = URL.substring(32);
             let pawnId = $(droppedOn).children().attr('data-id');
             let x = $(droppedOn).attr('data-x');
             let y = $(droppedOn).attr('data-y');
-            URL = '/game/move/' + URL[5] + '/' + pawnId + '/' + x + '/' + y;
+            let URL_MOVE = '/game/move/' + ID_game[5] + '/' + pawnId + '/' + x + '/' + y;
 
             /* REPLACE TEXT FOR THE TURN OF THE PLAYER */
             let TEXT_TURN = $('#player-turn').html();
-
-
-
+            /* UPDATE POSITION OF A PIECE */
             $.ajax({
-                url: URL, success: function (result) {
+                url: URL_MOVE, success: function (result) {
                     console.log("Moves save in bdd");
-
-                    /* REPLACE TEXT FOR THE TURN OF THE PLAYER */
-                    if(TEXT_TURN === 'Black') {
-                        $('#player-turn').text(TEXT_TURN.replace(TEXT_TURN,"White"))
+                    if (TEXT_TURN === 'Black') {
+                        $('#player-turn').text(TEXT_TURN.replace(TEXT_TURN, "White"))
+                    } else if (TEXT_TURN === 'White') {
+                        $('#player-turn').text(TEXT_TURN.replace(TEXT_TURN, "Black"))
                     }
-                    else if(TEXT_TURN === 'White') {
-                        $('#player-turn').text(TEXT_TURN.replace(TEXT_TURN,"Black"))
-                    }
-                    /*********/
                 }
             });
+            /****************/
         },
     });
 });
 
-board.find('.figure').not('td:empty').droppable("disable");
+// board.find('.figure').not('td:empty').droppable("disable");
 
 console.log("js fully loaded")
