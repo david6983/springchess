@@ -4,7 +4,7 @@
 </head>
 <body>
 <!--/* Main page (index) */-->
-<div th:fragment="content">
+<div th:fragment="content" th:id="'game'+${game.getId()}">
     <h1 class="text-center">Welcome to Chess</h1>
     <div class="container-fluid">
         <h2>Game <span th:text="${game.getId()}"></span></h2>
@@ -12,7 +12,7 @@
             <li>Player <span>1</span> is <span th:text="${game.getCurrentPlayer() != 1 ? 'White' : 'Black'}" class="bold">Black</span></li>
             <li>Player <span>2</span> is <span th:text="${game.getCurrentPlayer() == 1 ? 'White' : 'Black'}" class="bold">White</span></li>
         </ul>
-        <h4><span th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}">Black</span> player your turn !</h4>
+        <h4><span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}">Black</span> player your turn !</h4>
         <h5 th:text="${error_msg}" class="alert-message">A message appear !</h5>
     </div>
     <div class="flex-container">
