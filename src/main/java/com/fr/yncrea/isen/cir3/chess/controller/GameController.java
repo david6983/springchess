@@ -122,18 +122,15 @@ public class GameController {
             Figure f2 = figures.getOne(pawnId2);
 
             // the player is able to move is own pawns only
-            if (f1.getOwner() == game.get().getCurrentPlayer()) {
+            if (f1.getOwner() == game.get().getCurrentPlayer() && f1.getOwner() != f2.getOwner()) {
                 //TODO implement the service code here
 
-                //TODO change set killed to remove from db !
-                //kill the target
-                f2.setKilled(1);
 
                 f1.setX(f2.getX());
                 f1.setY(f2.getY());
 
+                figures.delete(f2);
                 figures.save(f1);
-                figures.save(f2);
 
                 logger.info("figure moved");
 
@@ -150,25 +147,6 @@ public class GameController {
             return "game-play";
         }
         logger.info("game {} not found for route moveOnAnyPawn", gameId);
-        return INDEX_REDIRECTION;
-    }
-
-    @GetMapping("/delete/{gameId}/{pawnId}")
-    public String delete(final Model model,
-                         @PathVariable final Long gameId,
-                         @PathVariable final Long pawnId
-    ) {
-        Optional<Game> game = games.findById(gameId);
-        if (game.isPresent()) {
-            // change the coordinate of the moved pawn to the new position
-            Figure f = figures.getOne(pawnId);
-            f.setKilled(1);
-            figures.save(f);
-            logger.info("figure killed");
-            Game g = game.get();
-            return GAME_REDIRECTION + game.get().getId();
-        }
-        logger.info("Figure not deleted, please correct it");
         return INDEX_REDIRECTION;
     }
 
