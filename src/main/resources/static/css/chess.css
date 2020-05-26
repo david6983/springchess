@@ -9,6 +9,7 @@
 
 .cell {
     height: 70px;
+    width: 70px;
 }
 
 .cell.even {
