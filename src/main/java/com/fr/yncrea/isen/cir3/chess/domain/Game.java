@@ -67,11 +67,19 @@ public class Game {
     }
 
     public Figure getFigureAt(int x, int y) {
+        if (x < 0 || x > 7 || y < 0 || y > 7) {
+            return null;
+        }
+
         for (Figure f: grid) {
             if (f.getX() == x && f.getY() == y) {
                 return f;
             }
         }
         return null;
+    }
+
+    public boolean isCellFree(int x, int y) {
+        return getFigureAt(x, y) == null;
     }
 }
