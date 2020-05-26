@@ -25,7 +25,6 @@ public class ChessGameService {
             Game game,
             int x,
             int y,
-            int killed,
             int code,
             String name,
             int owner
@@ -35,7 +34,7 @@ public class ChessGameService {
         fig.setCode(code);
         fig.setX(x);
         fig.setY(y);
-        fig.setKilled(killed);
+        fig.setKilled(0);
         fig.setName(name);
         fig.setOwner(owner);
         fig.setGame(game);
@@ -55,8 +54,8 @@ public class ChessGameService {
             for (int j = 0; j < Game.WIDTH; j++) {
                 String figName = Game.FIGURES_PLACEMENT.get(j);
 
-                addFigureToGrid(grid, game, j, 5 * (1 - i) + 1,0, FigureName.PAWN.ordinal(),"pawn", i);
-                addFigureToGrid(grid, game, j, 7 * (1 - i),0, FigureName.valueOf(figName.toUpperCase()).ordinal(), figName, i);
+                addFigureToGrid(grid, game, j, 5 * (1 - i) + 1, FigureName.PAWN.ordinal(),"pawn", i);
+                addFigureToGrid(grid, game, j, 7 * (1 - i), FigureName.valueOf(figName.toUpperCase()).ordinal(), figName, i);
             }
         }
         // add the grid to the game
