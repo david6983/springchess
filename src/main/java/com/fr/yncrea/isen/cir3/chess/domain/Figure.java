@@ -24,9 +24,6 @@ public class Figure {
     Integer y;
 
     @Column
-    Integer killed;
-
-    @Column
     String name;
 
     @Column
@@ -57,14 +54,6 @@ public class Figure {
 
     public void setX(int x) {
         this.x = x;
-    }
-
-    public int getKilled() {
-        return killed;
-    }
-
-    public void setKilled(int killed) {
-        this.killed = killed;
     }
 
     public int getY() {

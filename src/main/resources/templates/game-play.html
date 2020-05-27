@@ -18,8 +18,8 @@
     <div class="flex-container">
         <table id="board">
             <tr th:each="y: ${#numbers.sequence(0, game.WIDTH - 1)}" class="line">
-                <td th:each="x: ${#numbers.sequence(0, game.WIDTH - 1)}" class="cell ui-droppable" th:classappend="|${(x % 2 == y % 2) ? 'odd' : 'even' }|" th:attr="data-x=${x}, data-y=${y}">
-                    <div th:if="${game.getFigureAt(x, y) != null} and ${game.getFigureAt(x,y).getKilled() == 0}" th:utext="${game.getFigureAt(x, y).getHtmlCode()}" th:attr="data-id=${game.getFigureAt(x, y).getId()}" class="figure ui-draggable" style="position: relative;">♜</div>
+                <td th:each="x: ${#numbers.sequence(0, game.WIDTH - 1)}" class="cell ui-droppable" th:classappend="|${(x % 2 == y % 2) ? 'odd' : 'even' } ${(game.getFigureAt(x, y) != null) ? 'disabled' : ''}|" th:attr="data-x=${x}, data-y=${y}">
+                    <div th:if="${game.getFigureAt(x, y) != null}" th:utext="${game.getFigureAt(x, y).getHtmlCode()}" th:attr="data-id=${game.getFigureAt(x, y).getId()}" class="figure ui-draggable" th:classappend="|${(game.getFigureAt(x,y).getOwner() == 0) ? 'white' : 'black' }|" style="position: relative;">♜</div>
                 </td>
             </tr>
         </table>

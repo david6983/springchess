@@ -34,7 +34,6 @@ public class ChessGameService {
         fig.setCode(code);
         fig.setX(x);
         fig.setY(y);
-        fig.setKilled(0);
         fig.setName(name);
         fig.setOwner(owner);
         fig.setGame(game);
