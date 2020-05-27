@@ -144,7 +144,7 @@ public class GameController {
             }
 
             model.addAttribute("game", game.get());
-            return "game-play";
+            return GAME_REDIRECTION + game.get().getId();
         }
         logger.info("game {} not found for route moveOnAnyPawn", gameId);
         return INDEX_REDIRECTION;
