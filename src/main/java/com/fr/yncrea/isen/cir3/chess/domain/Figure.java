@@ -45,7 +45,9 @@ public class Figure {
     }
 
     public void setCode(int code) {
-        this.code = code;
+        if (code >= 0 && code <= 5) {
+            this.code = code;
+        }
     }
 
     public int getX() {
@@ -53,7 +55,9 @@ public class Figure {
     }
 
     public void setX(int x) {
-        this.x = x;
+        if (x >= 0 && x <= 7) {
+            this.x = x;
+        }
     }
 
     public int getY() {
@@ -61,7 +65,9 @@ public class Figure {
     }
 
     public void setY(int y) {
-        this.y = y;
+        if (y >= 0 && y <= 7) {
+            this.y = y;
+        }
     }
 
     public String getName() {
@@ -69,7 +75,9 @@ public class Figure {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (FigureName.stringToFigureName(name) != null) {
+            this.name = name;
+        }
     }
 
     public int getOwner() {

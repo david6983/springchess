@@ -88,15 +88,18 @@ public class GameController {
 
             // the player is able to move is own pawns only
             if (f.getOwner() == game.get().getCurrentPlayer()) {
-                f.setX(x);
-                f.setY(y);
-                figures.save(f);
-                logger.info("figure moved");
+                // check the movement
+                if (gameService.checkAny(game.get(), f, x, y)) {
+                    f.setX(x);
+                    f.setY(y);
+                    figures.save(f);
+                    logger.info("figure moved");
 
-                // change player
-                Game g = game.get();
-                g.changePlayer();
-                games.save(g);
+                    // change player
+                    Game g = game.get();
+                    g.changePlayer();
+                    games.save(g);
+                }
             } else {
                 //TODO throw exception and inform the view
                 logger.info("You can't move a pawn that doesn't belong to you !");
@@ -123,21 +126,21 @@ public class GameController {
 
             // the player is able to move is own pawns only
             if (f1.getOwner() == game.get().getCurrentPlayer() && f1.getOwner() != f2.getOwner()) {
-                //TODO implement the service code here
+                // check the movement
+                if (gameService.checkAny(game.get(), f1, f2.getX(), f2.getY())) {
+                    f1.setX(f2.getX());
+                    f1.setY(f2.getY());
 
+                    figures.delete(f2);
+                    figures.save(f1);
 
-                f1.setX(f2.getX());
-                f1.setY(f2.getY());
+                    logger.info("figure moved");
 
-                figures.delete(f2);
-                figures.save(f1);
-
-                logger.info("figure moved");
-
-                // change player
-                Game g = game.get();
-                g.changePlayer();
-                games.save(g);
+                    // change player
+                    Game g = game.get();
+                    g.changePlayer();
+                    games.save(g);
+                }
             } else {
                 //TODO throw exception and inform the view
                 logger.info("You can't move a pawn that doesn't belong to you !");

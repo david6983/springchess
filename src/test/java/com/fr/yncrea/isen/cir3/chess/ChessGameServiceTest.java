@@ -1,5 +1,6 @@
 package com.fr.yncrea.isen.cir3.chess;
 
+import com.fr.yncrea.isen.cir3.chess.domain.Figure;
 import com.fr.yncrea.isen.cir3.chess.domain.Game;
 import com.fr.yncrea.isen.cir3.chess.services.ChessGameService;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,24 @@ public class ChessGameServiceTest {
 
     @Test
     public void checkBishopTest() {
+        // first diagonal
+        assertThat(service.checkBishop(game, 2, 7, 0, 5)).isFalse();
+        // move the pawn that is on the path of the bishop
+        game.getFigureAt(1, 6).setY(5);
+        assertThat(service.checkBishop(game, 2, 7, 0, 5)).isTrue();
 
+        // second diagonal
+        assertThat(service.checkBishop(game, 2, 7, 4, 5)).isFalse();
+        // move the pawn that is on the path of the bishop
+        game.getFigureAt(3, 6).setY(5);
+        assertThat(service.checkBishop(game, 2, 7, 4, 5)).isTrue();
+
+        // can't go in front even if with move the pawn in front of the bishop
+        game.getFigureAt(2, 6).setY(3);
+        assertThat(service.checkBishop(game, 2, 7, 2, 5)).isFalse();
+
+        // can't go outside the map
+        assertThat(service.checkBishop(game, 2, 7, -1, 8)).isFalse();
     }
 
     @Test
@@ -56,6 +74,11 @@ public class ChessGameServiceTest {
 
     @Test
     public void checkKnightTest() {
+
+    }
+
+    @Test
+    public void checkAnyTest() {
 
     }
 }

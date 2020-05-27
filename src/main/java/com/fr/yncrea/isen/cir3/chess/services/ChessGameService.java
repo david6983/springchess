@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -116,6 +117,32 @@ public class ChessGameService {
                 (Math.abs(x - nx) == 2 && Math.abs(y - ny) == 1);
     }
 
+    public boolean checkPawn(Game game, Figure f, int nx, int ny) {
+        // get the owner of the figure
+        int owner = f.getOwner();
+        // compute the direction according to the owner
+        int dy = Arrays.asList(-1, 1).get(owner);
+        // y offset
+        int py = f.getY() + dy;
+        // get x of the figure
+        int x = f.getX();
+
+        // the move is strictly forward
+        if (nx == x) {
+            // verify the target cell is free and the pawn move by +1 on;y
+            if (game.isCellFree(nx, ny) && ny == py) {
+                return true;
+            } else if (f.getY() == (5 * (1 - owner) + 1) && ny == (py + dy)) { // manage the move +2 at the beginning
+                return game.isCellFree(x, py) && game.isCellFree(x, py + dy);
+            }
+        } else if (Math.abs(nx - x) == 1 && ny == py) { // the move is in diagonal
+            // verify if there is any pawn on the target cell
+            return game.getFigureAt(nx, ny) != null;
+        }
+
+        return false;
+    }
+
     public boolean checkAny(Game game, Figure f1, int dx, int dy) {
         FigureName name = FigureName.stringToFigureName(f1.getName());
         int x = f1.getX();
@@ -137,6 +164,9 @@ public class ChessGameService {
                 break;
             case KNIGHT:
                 check = checkKnight(x, y, dx, dy);
+                break;
+            case PAWN:
+                check = checkPawn(game, f1, dx, dy);
                 break;
         }
 
