@@ -38,6 +38,12 @@ public class Game {
     @Column(nullable = false)
     private Integer currentPlayer = START_PLAYER;
 
+    @Enumerated(EnumType.ORDINAL)
+    private Castling castlingBlack = Castling.NO_CASTLING;
+
+    @Enumerated(EnumType.ORDINAL)
+    private Castling castlingWhite = Castling.NO_CASTLING;
+
     public Long getId() {
         return id;
     }
@@ -64,6 +70,22 @@ public class Game {
 
     public void changePlayer() {
         this.currentPlayer = 1 - this.currentPlayer;
+    }
+
+    public Castling getCastlingBlack() {
+        return castlingBlack;
+    }
+
+    public void setCastlingBlack(Castling castlingBlack) {
+        this.castlingBlack = castlingBlack;
+    }
+
+    public Castling getCastlingWhite() {
+        return castlingWhite;
+    }
+
+    public void setCastlingWhite(Castling castlingWhite) {
+        this.castlingWhite = castlingWhite;
     }
 
     public Figure getFigureAt(int x, int y) {

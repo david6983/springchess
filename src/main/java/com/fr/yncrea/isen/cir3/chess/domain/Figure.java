@@ -27,7 +27,10 @@ public class Figure {
     String name;
 
     @Column
-    int owner;
+    Integer owner;
+
+    @Column
+    Integer countPlayed = 0;
 
     @ManyToOne
     private Game game;
@@ -96,6 +99,13 @@ public class Figure {
         this.game = game;
     }
 
+    public Integer getCountPlayed() {
+        return countPlayed;
+    }
+
+    public void updateCountPlayed() {
+        this.countPlayed = this.countPlayed + 1;
+    }
 
     public String getHtmlCode() {
         String htmlCode = CODE_PREFIX + (CODE_NUMBER + code) + ";";

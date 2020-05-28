@@ -92,6 +92,8 @@ public class GameController {
                 if (gameService.checkAny(game.get(), f, x, y)) {
                     f.setX(x);
                     f.setY(y);
+                    f.updateCountPlayed();
+
                     figures.save(f);
                     logger.info("figure moved");
 
@@ -130,6 +132,8 @@ public class GameController {
                 if (gameService.checkAny(game.get(), f1, f2.getX(), f2.getY())) {
                     f1.setX(f2.getX());
                     f1.setY(f2.getY());
+                    f1.updateCountPlayed();
+
                     figures.save(f1);
                     logger.info("figure moved");
 
