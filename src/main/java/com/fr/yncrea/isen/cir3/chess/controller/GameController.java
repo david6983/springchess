@@ -130,15 +130,19 @@ public class GameController {
                 if (gameService.checkAny(game.get(), f1, f2.getX(), f2.getY())) {
                     f1.setX(f2.getX());
                     f1.setY(f2.getY());
+                    figures.save(f1);
+                    logger.info("figure moved");
 
                     figures.delete(f2);
-                    figures.save(f1);
-
-                    logger.info("figure moved");
+                    logger.info("figure f2 deleted");
 
                     // change player
                     Game g = game.get();
                     g.changePlayer();
+
+                    // delete figure f2
+                    g.getGrid().remove(f2);
+
                     games.save(g);
                 }
             } else {

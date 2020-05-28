@@ -77,6 +77,10 @@ public class ChessGameService {
         int dx = isPositive(x2 - x1);
         int dy = isPositive(y2 - y1);
 
+        // ignore the last cell
+        x2 -= dx;
+        y2 -= dy;
+
         while(x1 != x2 || y1 != y2) {
             x1 += dx;
             y1 += dy;
