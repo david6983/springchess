@@ -19,6 +19,7 @@ public class ChessGameService {
      */
     private Logger logger = LoggerFactory.getLogger(ChessGameService.class);
 
+
     private void addFigureToGrid(
             List<Figure> grid,
             Game game,
@@ -38,10 +39,12 @@ public class ChessGameService {
         fig.setGame(game);
 
         grid.add(fig);
+
     }
 
     /**
      * generate a grid of chess with all the pawns
+     *
      * @param game game that contains the grid
      */
     public void generateGrid(final Game game) {
@@ -52,7 +55,7 @@ public class ChessGameService {
             for (int j = 0; j < Game.WIDTH; j++) {
                 String figName = Game.FIGURES_PLACEMENT.get(j);
 
-                addFigureToGrid(grid, game, j, 5 * (1 - i) + 1, FigureName.PAWN.ordinal(),"pawn", i);
+                addFigureToGrid(grid, game, j, 5 * (1 - i) + 1, FigureName.PAWN.ordinal(), "pawn", i);
                 addFigureToGrid(grid, game, j, 7 * (1 - i), FigureName.valueOf(figName.toUpperCase()).ordinal(), figName, i);
             }
         }
@@ -79,7 +82,7 @@ public class ChessGameService {
         x2 -= dx;
         y2 -= dy;
 
-        while(x1 != x2 || y1 != y2) {
+        while (x1 != x2 || y1 != y2) {
             x1 += dx;
             y1 += dy;
             if (!game.isCellFree(x1, y1)) {
@@ -251,4 +254,75 @@ public class ChessGameService {
     public boolean enablePromotePawn(Figure f) {
         return (FigureName.stringToFigureName(f.getName()) == FigureName.PAWN && (f.getY() == 0 || f.getY() == 7));
     }
+
+    public void findKing(Game game) {
+        for (int i = 0; i < Game.WIDTH; i++) {
+            for (int j = 0; j < Game.WIDTH; j++) {
+                if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getName().equals("king")) {
+                    if (game.getFigureAt(i, j).getOwner() == 0) {
+                        game.setWhiteKingId(game.getFigureAt(i, j).getId());
+                    } else {
+                        game.setBlackKingId(game.getFigureAt(i, j).getId());
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    public boolean checkEchec(Game game) {
+        int xKing, yKing;
+        int player = game.getCurrentPlayer();
+        boolean response = false;
+        if (player == 0) {
+            xKing = game.getFigureById(game.getWhiteKingId()).getX();
+            yKing = game.getFigureById(game.getWhiteKingId()).getY();
+        } else {
+            xKing = game.getFigureById(game.getBlackKingId()).getX();
+            yKing = game.getFigureById(game.getBlackKingId()).getY();
+        }
+        for (int i = 0; i < Game.WIDTH; i++) {
+            for (int j = 0; j < Game.WIDTH; j++) {
+                if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getOwner() != player) {
+                    if(response){
+                        System.out.println("ECHEC " + FigureName.stringToFigureName(game.getFigureAt(i, j).getName()));
+                        return true;
+                    }
+                    else
+                        response = checkAny(game, game.getFigureAt(i, j), xKing, yKing);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public Boolean checkMate(Game game){
+        int xKing, yKing;
+        int player = game.getCurrentPlayer();
+        boolean response = false;
+        if (player == 1) {
+            xKing = game.getFigureById(game.getWhiteKingId()).getX();
+            yKing = game.getFigureById(game.getWhiteKingId()).getY();
+        } else {
+            xKing = game.getFigureById(game.getBlackKingId()).getX();
+            yKing = game.getFigureById(game.getBlackKingId()).getY();
+        }
+        for (int i = 0; i < Game.WIDTH; i++) {
+            for (int j = 0; j < Game.WIDTH; j++) {
+                if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getOwner() == player) {
+                    if(response){
+                        System.out.println("MATE " + FigureName.stringToFigureName(game.getFigureAt(i, j).getName()));
+                        return true;
+                    }
+                    else
+                        response = checkAny(game, game.getFigureAt(i, j), xKing, yKing);
+                }
+            }
+        }
+
+        return false;
+    }
+
 }

@@ -55,6 +55,9 @@ public class GameController {
 
         // save generated figures
         figures.saveAll(g.getGrid());
+        gameService.findKing(g);
+
+        games.save(g);
         logger.info("figures saved from game/");
 
         return GAME_REDIRECTION + g.getId();
@@ -68,6 +71,8 @@ public class GameController {
         if (game.isPresent()) {
             model.addAttribute("game", game.get());
             model.addAttribute("error_msg", "");
+            System.out.println("Bool echec " +gameService.checkEchec(game.get()));
+            System.out.println("Bool mate " + gameService.checkMate(game.get()));
             return "game-play";
         }
         logger.info("game {} not found for route /play/{}", id, id);

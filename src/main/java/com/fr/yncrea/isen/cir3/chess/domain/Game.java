@@ -45,6 +45,13 @@ public class Game {
     @Column(nullable = false)
     private Integer currentPlayer = START_PLAYER;
 
+    @Column
+    private Long whiteKingId;
+
+    @Column
+    private Long blackKingId;
+
+
     public Long getId() {
         return id;
     }
@@ -73,6 +80,22 @@ public class Game {
         this.currentPlayer = 1 - this.currentPlayer;
     }
 
+    public Long getWhiteKingId() {
+        return whiteKingId;
+    }
+
+    public void setWhiteKingId(Long whiteKingId) {
+        this.whiteKingId = whiteKingId;
+    }
+
+    public Long getBlackKingId() {
+        return blackKingId;
+    }
+
+    public void setBlackKingId(Long blackKingId) {
+        this.blackKingId = blackKingId;
+    }
+
     public Figure getFigureAt(int x, int y) {
         if (x < 0 || x > 7 || y < 0 || y > 7) {
             return null;
@@ -80,6 +103,15 @@ public class Game {
 
         for (Figure f: grid) {
             if (f.getX() == x && f.getY() == y) {
+                return f;
+            }
+        }
+        return null;
+    }
+
+    public Figure getFigureById(Long id) {
+        for (Figure f: grid) {
+            if (f.getId().equals(id)) {
                 return f;
             }
         }
