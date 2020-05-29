@@ -146,6 +146,11 @@ public class ChessGameService {
                 return game.isCellFree(x, py) && game.isCellFree(x, py + dy);
             }
         } else if (Math.abs(nx - x) == 1 && ny == py) { // the move is in diagonal
+            if (checkEnPassant(game, f, nx, ny)) {
+                game.getGrid().remove(game.getFigureAt(f.getX() + 1, f.getY())); //TODO Fix
+                return true;
+            }
+
             return game.getFigureAt(nx, ny) != null;
         }
 
@@ -156,11 +161,13 @@ public class ChessGameService {
         int player = game.getCurrentPlayer();
         // Theoretical pawn position to realize an en passant.
         int yPawn = (pawn.getOwner() == PlayerName.BLACK.ordinal()) ? 4 : 3;
-        // verify the target cell is free
-        if (game.getFigureAt(nx, ny) == null) {
-            // verify the opposite pawn played only once and it position is on the right of the pawn
-            Figure oppositePawn = game.getFigureAt(pawn.getX() + 1, pawn.getY());
-            return oppositePawn.getOwner() == player && oppositePawn.getCountPlayed() == 1;
+        if (pawn.getY() == yPawn) {
+            // verify the target cell is free
+            if (game.getFigureAt(nx, ny) == null) {
+                // verify the opposite pawn played only once and it position is on the right of the pawn
+                Figure oppositePawn = game.getFigureAt(pawn.getX() + 1, pawn.getY());
+                return oppositePawn.getOwner() == (1 - player) && oppositePawn.getCountPlayed() == 1;
+            }
         }
 
         return false;
@@ -239,5 +246,9 @@ public class ChessGameService {
         int yRook = (player == PlayerName.BLACK.ordinal()) ? 0 : 7;
         // change the position of the left rook
         game.getFigureAt(xRook, yRook).setX(dxRook);
+    }
+
+    public boolean enablePromotePawn(Figure f) {
+        return (FigureName.stringToFigureName(f.getName()) == FigureName.PAWN && (f.getY() == 0 || f.getY() == 7));
     }
 }

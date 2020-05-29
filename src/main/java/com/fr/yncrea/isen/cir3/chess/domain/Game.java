@@ -21,6 +21,13 @@ public class Game {
             "rook"
     );
 
+    public static final List<String> FIGURES_PROMOTION = Arrays.asList(
+            "rook",
+            "knight",
+            "bishop",
+            "queen"
+    );
+
     /**
      * Default width of a chess grid.
      */

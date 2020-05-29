@@ -101,6 +101,11 @@ public class GameController {
                     Game g = game.get();
                     g.changePlayer();
                     games.save(g);
+
+                    // pawn promotion
+                    if (gameService.enablePromotePawn(f)) {
+                        //TODO redirect to promotion form or modal
+                    }
                 }
             } else {
                 //TODO throw exception and inform the view
@@ -148,6 +153,11 @@ public class GameController {
                     g.getGrid().remove(f2);
 
                     games.save(g);
+
+                    // pawn promotion
+                    if (gameService.enablePromotePawn(f1)) {
+                        //TODO redirect to promotion form or modal
+                    }
                 }
             } else {
                 //TODO throw exception and inform the view
