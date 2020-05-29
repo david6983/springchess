@@ -110,8 +110,16 @@ public class ChessGameService {
         return checkBishop(game, x, y, nx, ny) || checkRook(game, x, y, nx, ny);
     }
 
-    public boolean checkKing(int x, int y, int nx, int ny) {
-        return Math.abs(x - nx) <= 1 && Math.abs(y - ny) <= 1;
+    public boolean checkKing(Game game, Figure f1, int nx, int ny) {
+        if (checkBigCastling(game, f1, nx, ny)) {
+            startCastling(game, 0, 3);
+            return true;
+        } else if (checkSmallCastling(game, f1, nx, ny)) {
+            startCastling(game, 7, 5);
+            return true;
+        } else {
+            return Math.abs(f1.getX() - nx) <= 1 && Math.abs(f1.getY() - ny) <= 1;
+        }
     }
 
     public boolean checkKnight(int x, int y, int nx, int ny) {
@@ -153,7 +161,7 @@ public class ChessGameService {
 
         switch (name) {
             case KING:
-                check = checkKing(x, y, dx, dy);
+                check = checkKing(game, f1, dx, dy);
                 break;
             case QUEEN:
                 check = checkQueen(game, x, y, dx, dy);
@@ -175,97 +183,50 @@ public class ChessGameService {
         return check;
     }
 
-    public void enableBigCastling(Game game, Figure f1, int dx, int dy) {
-        int yRook = (f1.getOwner() == PlayerName.BLACK.ordinal()) ? 0 : 7;
-        int xStart = 0;
-        int xFinal = 3;
+    public boolean checkSmallCastling(Game game, Figure f1, int dx, int dy) {
+        int player = game.getCurrentPlayer();
+        // Theoretical king's starting position
+        int yKing = (f1.getOwner() == PlayerName.BLACK.ordinal()) ? 0 : 7;
+        int xKing = 4;
 
-        // the figure is a rook
-        if (FigureName.stringToFigureName(f1.getName()) == FigureName.ROOK) {
-            // the rook is the left one and have never been played
-            if (f1.getCountPlayed() == 0 && f1.getX() == xStart && f1.getY() == yRook) {
-                // the final destination is on the right of the king
-                if (dx == xFinal && dy == yRook) {
-                    // the rook enable the big castling
-                    if (game.getCurrentPlayer() == PlayerName.BLACK.ordinal()) {
-                        // for the black player
-                        game.setCastlingBlack(Castling.BIG_CASTLING);
-                    } else if (game.getCurrentPlayer() == PlayerName.WHITE.ordinal()) {
-                        // for the white player
-                        game.setCastlingWhite(Castling.BIG_CASTLING);
-                    }
-                }
+        // verify the king is at it starting point
+        if (f1.getX() == xKing && f1.getY() == yKing && f1.getCountPlayed() == 0) {
+            // verify the right rook is at it starting point
+            if (game.getFigureAt(7, yKing) != null && game.getFigureAt(7, yKing).getCountPlayed() == 0) {
+                // verify the segment is free between the king and the rook
+                isSegmentFree(game, f1.getX(), f1.getY(), 7, yKing);
+                // verify the destination of the king
+                return dx == 6 && dy == yKing;
             }
         }
-    }
 
-    public void enableSmallCastling(Game game, Figure f1, int dx, int dy) {
-        int yRook = (f1.getOwner() == PlayerName.BLACK.ordinal()) ? 0 : 7;
-        int xStart = 7;
-        int xFinal = 5;
-
-        // the figure is a rook
-        if (FigureName.stringToFigureName(f1.getName()) == FigureName.ROOK) {
-            // the rook is the left one and has never been played
-            if (f1.getCountPlayed() == 0 && f1.getX() == xStart && f1.getY() == yRook) {
-                // the final destination is on the right of the king
-                if (dx == xFinal && dy == yRook) {
-                    // the rook enable the big castling
-                    if (game.getCurrentPlayer() == PlayerName.BLACK.ordinal()) {
-                        // for the black player
-                        game.setCastlingBlack(Castling.SMALL_CASTLING);
-                    } else if (game.getCurrentPlayer() == PlayerName.WHITE.ordinal()) {
-                        // for the white player
-                        game.setCastlingWhite(Castling.SMALL_CASTLING);
-                    }
-                }
-            }
-        }
+        return false;
     }
 
     public boolean checkBigCastling(Game game, Figure f1, int dx, int dy) {
         int player = game.getCurrentPlayer();
+        // Theoretical king's starting position
+        int yKing = (f1.getOwner() == PlayerName.BLACK.ordinal()) ? 0 : 7;
+        int xKing = 4;
 
-        // verify if big castling is enabled, if true, the rook is already placed
-        if ((player == PlayerName.BLACK.ordinal() && game.getCastlingBlack() == Castling.BIG_CASTLING) ||
-            (player == PlayerName.WHITE.ordinal() && game.getCastlingWhite() == Castling.BIG_CASTLING)
-        ) {
-            // the figure is the king
-            if (FigureName.stringToFigureName(f1.getName()) == FigureName.KING) {
-                // Theoretical king's starting position
-                int yKing = (f1.getOwner() == PlayerName.BLACK.ordinal()) ? 0 : 7;
-                int xKing = 4;
-                // the king is placed in it starting position and has never been played
-                if (yKing == f1.getY() && xKing == f1.getX() && f1.getCountPlayed() == 0) {
-                    // verify the destination is on the left of the rook already placed
-                    return dx == 2 && dy == f1.getY();
-                }
+        // verify the king is at it starting point
+        if (f1.getX() == xKing && f1.getY() == yKing && f1.getCountPlayed() == 0) {
+            // verify the right rook is at it starting point
+            if (game.getFigureAt(7, yKing) != null && game.getFigureAt(7, yKing).getCountPlayed() == 0) {
+                // verify the segment is free between the king and the rook
+                isSegmentFree(game, f1.getX(), f1.getY(), 1, yKing);
+                // verify the destination of the king
+                return dx == 2 && dy == yKing;
             }
         }
 
         return false;
     }
 
-    public boolean checkSmallCastling(Game game, Figure f1, int dx, int dy) {
+    public void startCastling(Game game, int xRook, int dxRook) {
         int player = game.getCurrentPlayer();
-
-        // verify if big castling is enabled, if true, the rook is already placed
-        if ((player == PlayerName.BLACK.ordinal() && game.getCastlingBlack() == Castling.SMALL_CASTLING) ||
-                (player == PlayerName.WHITE.ordinal() && game.getCastlingWhite() == Castling.SMALL_CASTLING)
-        ) {
-            // the figure is the king
-            if (FigureName.stringToFigureName(f1.getName()) == FigureName.KING) {
-                // Theoretical king's starting position
-                int yKing = (f1.getOwner() == PlayerName.BLACK.ordinal()) ? 0 : 7;
-                int xKing = 4;
-                // the king is placed in it starting position and has never been played
-                if (yKing == f1.getY() && xKing == f1.getX() && f1.getCountPlayed() == 0) {
-                    // verify the destination is on the left of the rook already placed
-                    return dx == 6 && dy == f1.getY();
-                }
-            }
-        }
-
-        return false;
+        int yRook = (player == PlayerName.BLACK.ordinal()) ? 0 : 7;
+        // change the position of the left rook
+        game.getFigureAt(xRook, yRook).setX(dxRook);
     }
 }
