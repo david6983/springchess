@@ -146,8 +146,21 @@ public class ChessGameService {
                 return game.isCellFree(x, py) && game.isCellFree(x, py + dy);
             }
         } else if (Math.abs(nx - x) == 1 && ny == py) { // the move is in diagonal
-            // verify if there is any pawn on the target cell
             return game.getFigureAt(nx, ny) != null;
+        }
+
+        return false;
+    }
+
+    public boolean checkEnPassant(Game game, Figure pawn, int nx, int ny) {
+        int player = game.getCurrentPlayer();
+        // Theoretical pawn position to realize an en passant.
+        int yPawn = (pawn.getOwner() == PlayerName.BLACK.ordinal()) ? 4 : 3;
+        // verify the target cell is free
+        if (game.getFigureAt(nx, ny) == null) {
+            // verify the opposite pawn played only once and it position is on the right of the pawn
+            Figure oppositePawn = game.getFigureAt(pawn.getX() + 1, pawn.getY());
+            return oppositePawn.getOwner() == player && oppositePawn.getCountPlayed() == 1;
         }
 
         return false;
@@ -184,7 +197,6 @@ public class ChessGameService {
     }
 
     public boolean checkSmallCastling(Game game, Figure f1, int dx, int dy) {
-        int player = game.getCurrentPlayer();
         // Theoretical king's starting position
         int yKing = (f1.getOwner() == PlayerName.BLACK.ordinal()) ? 0 : 7;
         int xKing = 4;
@@ -204,7 +216,6 @@ public class ChessGameService {
     }
 
     public boolean checkBigCastling(Game game, Figure f1, int dx, int dy) {
-        int player = game.getCurrentPlayer();
         // Theoretical king's starting position
         int yKing = (f1.getOwner() == PlayerName.BLACK.ordinal()) ? 0 : 7;
         int xKing = 4;
