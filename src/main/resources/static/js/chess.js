@@ -34,7 +34,7 @@ $(function (e) {
             let dropped = ui.draggable;
             let droppedOn = $(this);
 
-            let gameId = $(location).attr('href').split('/')[5]; // http://localhost:8080/game/{id}
+            let gameId = $(location).attr('href').split('/')[5]; // http://localhost:8080/game/play/{id}
 
             let deleteUrl;
             const oldPawnId = $(droppedOn).children();
@@ -69,5 +69,8 @@ $(function (e) {
     });
 });
 
+if ($(location).attr('href').split('/')[4] === "promote") {
+    $('#promotionModal').modal('toggle');
+}
 
 console.log("js fully loaded");

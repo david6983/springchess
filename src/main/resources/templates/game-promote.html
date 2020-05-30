@@ -24,5 +24,36 @@
             </tr>
         </table>
     </div>
+    <!--/* Promotion modal */-->
+    <div class="modal" id="promotionModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Promote your pawn by upgrating it from the pieces below</h4>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="container-fluid text-center">
+                        <form action="#" th:action="@{/game/promote}" th:object="${figure}" method="post">
+                            <input type="hidden" th:field="*{id}" />
+                            <div class="form-group">
+                                <label for="name">Choose your piece</label>
+                                <select name="name" id="name" class="form-control" th:field="*{name}">
+                                    <option th:value="queen" th:text="queen"></option>
+                                    <option th:value="bishop" th:text="bishop"></option>
+                                    <option th:value="rook" th:text="rook"></option>
+                                    <option th:value="knight" th:text="knight"></option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Promote</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>

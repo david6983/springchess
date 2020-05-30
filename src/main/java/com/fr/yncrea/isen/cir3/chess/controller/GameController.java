@@ -1,7 +1,9 @@
 package com.fr.yncrea.isen.cir3.chess.controller;
 
 import com.fr.yncrea.isen.cir3.chess.domain.Figure;
+import com.fr.yncrea.isen.cir3.chess.domain.FigureName;
 import com.fr.yncrea.isen.cir3.chess.domain.Game;
+import com.fr.yncrea.isen.cir3.chess.form.PromoteForm;
 import com.fr.yncrea.isen.cir3.chess.repository.FigureRepository;
 import com.fr.yncrea.isen.cir3.chess.repository.GameRepository;
 import com.fr.yncrea.isen.cir3.chess.services.ChessGameService;
@@ -10,8 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
@@ -79,6 +83,50 @@ public class GameController {
         return INDEX_REDIRECTION;
     }
 
+    @GetMapping("/promote/{gameId}/{promoteId}")
+    public String promote(final Model model,
+                          @PathVariable final Long gameId,
+                          @PathVariable final Long promoteId
+    ) {
+        Optional<Game> game = games.findById(gameId);
+        if (game.isPresent()) {
+            Optional<Figure> fig = figures.findById(promoteId);
+            if (fig.isPresent()) {
+                model.addAttribute("game", game.get());
+                model.addAttribute("error_msg", "");
+                model.addAttribute("figure", fig.get());
+                System.out.println("Bool echec " + gameService.checkEchec(game.get()));
+                System.out.println("Bool mate " + gameService.checkMate(game.get()));
+                return "game-promote";
+            }
+        }
+        logger.info("game {} not found for route /promote/{}/{}", gameId, gameId, promoteId);
+        return INDEX_REDIRECTION;
+    }
+
+    @PostMapping("/promote")
+    public String promoteForm(PromoteForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            logger.info("error promote form");
+        }
+
+        logger.info("you decided to promote {} to a {}", form.getId(), form.getName());
+
+        Optional<Figure> figure = figures.findById(form.getId());
+
+        if (figure.isPresent()) {
+            if (Game.FIGURES_PROMOTION.contains(form.getName())) {
+                figure.get().setName(form.getName());
+                figure.get().setCode(FigureName.stringToFigureName(form.getName()).ordinal());
+                figures.save(figure.get());
+            }
+
+            return GAME_REDIRECTION + figure.get().getGame().getId();
+        }
+
+        return "game-promote";
+    }
+
     @GetMapping("/move/{gameId}/{pawnId}/{x}/{y}")
     public String moveOnVoidCell(final Model model,
                                  @PathVariable final Long gameId,
@@ -109,7 +157,7 @@ public class GameController {
 
                     // pawn promotion
                     if (gameService.enablePromotePawn(f)) {
-                        //TODO redirect to promotion form or modal
+                        return "redirect:/game/promote/" + game.get().getId() + "/" + f.getId();
                     }
                 }
             } else {
@@ -161,7 +209,7 @@ public class GameController {
 
                     // pawn promotion
                     if (gameService.enablePromotePawn(f1)) {
-                        //TODO redirect to promotion form or modal
+                        return "redirect:/game/promote/" + game.get().getId() + "/" + f1.getId();
                     }
                 }
             } else {
