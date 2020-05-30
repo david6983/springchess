@@ -3,9 +3,11 @@ package com.fr.yncrea.isen.cir3.chess.controller;
 import com.fr.yncrea.isen.cir3.chess.domain.Figure;
 import com.fr.yncrea.isen.cir3.chess.domain.FigureName;
 import com.fr.yncrea.isen.cir3.chess.domain.Game;
+import com.fr.yncrea.isen.cir3.chess.domain.Move;
 import com.fr.yncrea.isen.cir3.chess.form.PromoteForm;
 import com.fr.yncrea.isen.cir3.chess.repository.FigureRepository;
 import com.fr.yncrea.isen.cir3.chess.repository.GameRepository;
+import com.fr.yncrea.isen.cir3.chess.repository.MoveRepository;
 import com.fr.yncrea.isen.cir3.chess.services.ChessGameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,9 @@ public class GameController {
     private GameRepository games;
 
     @Autowired
+    private MoveRepository moves;
+
+    @Autowired
     private FigureRepository figures;
 
     private Logger logger = LoggerFactory.getLogger(GameController.class);
@@ -46,8 +51,10 @@ public class GameController {
     @GetMapping("/start")
     public String start() {
         // clean up
+        //TODO clean according to one game not delete all the table
         games.deleteAll();
         figures.deleteAll();
+        moves.deleteAll();
 
         // create a game
         Game g = new Game();
@@ -150,6 +157,13 @@ public class GameController {
                     figures.save(f);
                     logger.info("figure moved");
 
+                    // save the move
+                    Move m = new Move();
+                    m.setCode(f.getMoveCode());
+                    m.setPlayer(game.get().getCurrentPlayer());
+
+                    moves.save(m);
+
                     // change player
                     Game g = game.get();
                     g.changePlayer();
@@ -197,6 +211,13 @@ public class GameController {
 
                     figures.delete(f2);
                     logger.info("figure f2 deleted");
+
+                    // save the move
+                    Move m = new Move();
+                    m.setCode(f1.getMoveCode());
+                    m.setPlayer(game.get().getCurrentPlayer());
+
+                    moves.save(m);
 
                     // change player
                     Game g = game.get();

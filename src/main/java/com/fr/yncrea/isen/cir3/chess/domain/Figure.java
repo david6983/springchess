@@ -15,22 +15,22 @@ public class Figure {
     private Long id;
 
     @Column
-    Integer code;
+    private Integer code;
 
     @Column
-    Integer x;
+    private Integer x;
 
     @Column
-    Integer y;
+    private Integer y;
 
     @Column
-    String name;
+    private String name;
 
     @Column
-    Integer owner;
+    private Integer owner;
 
     @Column
-    Integer countPlayed = 0;
+    private Integer countPlayed = 0;
 
     @ManyToOne
     private Game game;
@@ -115,5 +115,9 @@ public class Figure {
         }
 
         return htmlCode;
+    }
+
+    public String getMoveCode() {
+        return (char) (x + 65) + Integer.toString(8 - y);
     }
 }

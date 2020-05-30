@@ -121,4 +121,16 @@ public class Game {
     public boolean isCellFree(int x, int y) {
         return getFigureAt(x, y) == null;
     }
+
+    public int getNumberOfPlay(int player) {
+        int count = 0;
+
+        for (Figure f: grid) {
+            if (player == f.getOwner()) {
+                count = count + f.getCountPlayed();
+            }
+        }
+
+        return count;
+    }
 }

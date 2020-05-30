@@ -9,8 +9,14 @@
     <div class="container-fluid">
         <h2>Game <span th:text="${game.getId()}"></span></h2>
         <ul>
-            <li>Player <span>1</span> is <span th:text="${game.getCurrentPlayer() != 1 ? 'White' : 'Black'}" class="bold">Black</span></li>
-            <li>Player <span>2</span> is <span th:text="${game.getCurrentPlayer() == 1 ? 'White' : 'Black'}" class="bold">White</span></li>
+            <li>Player <span>1</span> is
+                <span class="bold">Black</span>
+                 (<span th:text="${game.getNumberOfPlay(1)}">0</span> moves)
+            </li>
+            <li>Player <span>2</span> is
+                <span class="bold">White</span>
+                 (<span th:text="${game.getNumberOfPlay(0)}">0</span> moves)
+            </li>
         </ul>
         <h4><span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}">Black</span> player your turn !</h4>
         <h5 th:text="${error_msg}" class="alert-message">A message appear !</h5>
