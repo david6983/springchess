@@ -55,7 +55,6 @@ public class GameController {
         games.deleteAll();
         figures.deleteAll();
         moves.deleteAll();
-
         // create a game
         Game g = new Game();
 
