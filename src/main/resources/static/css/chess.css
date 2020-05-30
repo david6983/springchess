@@ -61,6 +61,7 @@
 @media only screen and (max-width: 1200px) {
     .cell {
         height: 65px;
+        width: 65px;
     }
 
     .figure {
@@ -77,6 +78,7 @@
 @media only screen and (max-width: 992px) {
     .cell {
         height: 55px;
+        width: 55px;
     }
 
     .figure {
@@ -93,10 +95,11 @@
 @media only screen and (max-width: 767px) {
     .cell {
         height: 44px;
+        width: 44px;
     }
 
     .figure {
-        font-size: 44px;
+        font-size: 31px;
     }
 
     #board {
