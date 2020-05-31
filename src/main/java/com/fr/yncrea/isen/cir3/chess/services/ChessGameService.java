@@ -19,7 +19,6 @@ public class ChessGameService {
      */
     private Logger logger = LoggerFactory.getLogger(ChessGameService.class);
 
-
     private void addFigureToGrid(
             List<Figure> grid,
             Game game,
@@ -37,7 +36,6 @@ public class ChessGameService {
         fig.setName(name);
         fig.setOwner(owner);
         fig.setGame(game);
-
         grid.add(fig);
 
     }
@@ -148,17 +146,13 @@ public class ChessGameService {
             } else if (f.getY() == (5 * (1 - owner) + 1) && ny == (py + dy)) { // manage the move +2 at the beginning
                 return game.isCellFree(x, py) && game.isCellFree(x, py + dy);
             }
-        } else if (Math.abs(nx - x) == 1 && ny == py) { // the move is in diagonal
-            if (checkEnPassant(game, f, nx, ny)) {
-                game.getGrid().remove(game.getFigureAt(f.getX() + 1, f.getY())); //TODO Fix
-                return true;
-            }
 
+        } else if (Math.abs(nx - x) == 1 && ny == py) { // the move is in diagonal
             return game.getFigureAt(nx, ny) != null;
         }
-
         return false;
     }
+
 
     public boolean checkEnPassant(Game game, Figure pawn, int nx, int ny) {
         int player = game.getCurrentPlayer();
@@ -167,14 +161,21 @@ public class ChessGameService {
         if (pawn.getY() == yPawn) {
             // verify the target cell is free
             if (game.getFigureAt(nx, ny) == null) {
-                // verify the opposite pawn played only once and it position is on the right of the pawn
-                Figure oppositePawn = game.getFigureAt(pawn.getX() + 1, pawn.getY());
+                Figure oppositePawn = null;
+                if(pawn.getX() - nx > 0 ) {
+                    // verify the opposite pawn played only once and it position is on the right of the pawn
+                    oppositePawn = game.getFigureAt(pawn.getX() - 1, pawn.getY());
+                }else{
+                    oppositePawn = game.getFigureAt(pawn.getX() + 1, pawn.getY());
+                }
+
                 return oppositePawn.getOwner() == (1 - player) && oppositePawn.getCountPlayed() == 1;
             }
         }
 
         return false;
     }
+
 
     public boolean checkAny(Game game, Figure f1, int dx, int dy) {
         FigureName name = FigureName.stringToFigureName(f1.getName());
@@ -271,7 +272,7 @@ public class ChessGameService {
     }
 
 
-    public boolean checkEchec(Game game) {
+    public Boolean checkEchec(Game game) {
         if (game.getFigureById(game.getWhiteKingId()) != null && game.getFigureById(game.getBlackKingId()) != null) {
             int xKing, yKing;
             int player = game.getCurrentPlayer();
@@ -287,7 +288,6 @@ public class ChessGameService {
                 for (int j = 0; j < Game.WIDTH; j++) {
                     if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getOwner() != player) {
                         if (response) {
-                            System.out.println("ECHEC " + FigureName.stringToFigureName(game.getFigureAt(i, j).getName()));
                             return true;
                         } else
                             response = checkAny(game, game.getFigureAt(i, j), xKing, yKing);
@@ -296,6 +296,12 @@ public class ChessGameService {
             }
         }
         return false;
+    }
+
+    public Boolean checkLifeSaver(Game game, Long id, int dx, int dy) {
+        int x = game.getFigureById(id).getX();
+        int y = game.getFigureById(id).getY();
+        return dx == x && dy == y;
     }
 
     public Boolean checkMate(Game game) {
@@ -314,14 +320,13 @@ public class ChessGameService {
                 for (int j = 0; j < Game.WIDTH; j++) {
                     if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getOwner() == player) {
                         if (response) {
-                            System.out.println("MATE " + FigureName.stringToFigureName(game.getFigureAt(i, j).getName()));
                             return true;
                         } else
                             response = checkAny(game, game.getFigureAt(i, j), xKing, yKing);
                     }
                 }
             }
-        }else {
+        } else {
             return true;
         }
         return false;

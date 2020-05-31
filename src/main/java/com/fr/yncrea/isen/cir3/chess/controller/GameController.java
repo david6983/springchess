@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @Controller
@@ -81,9 +82,20 @@ public class GameController {
         if (game.isPresent()) {
             model.addAttribute("game", game.get());
             model.addAttribute("error_msg", "");
-            logger.info("Bool echec " +gameService.checkEchec(game.get()));
+//            logger.info("Bool echec " +gameService.checkEchec(game.get()));
+//            if (gameService.checkEchec(game.get())) {
+//                game.get().setEchec(1);
+//            } else {
+//                game.get().setEchec(0);
+//            }
+//            games.save(game.get());
+            logger.info("Bool echec " + gameService.checkEchec(game.get()));
+            if (gameService.checkEchec(game.get())) {
+                game.get().setEchec(1);
+            } else {
+                game.get().setEchec(0);
+            }
             logger.info("Bool mate " + gameService.checkMate(game.get()));
-            model.addAttribute("echec", gameService.checkEchec(game.get()));
             model.addAttribute("mate", gameService.checkMate(game.get()));
             return "game-play";
         }
@@ -103,8 +115,6 @@ public class GameController {
                 model.addAttribute("game", game.get());
                 model.addAttribute("error_msg", "");
                 model.addAttribute("figure", fig.get());
-                System.out.println("Bool echec " + gameService.checkEchec(game.get()));
-                System.out.println("Bool mate " + gameService.checkMate(game.get()));
                 return "game-promote";
             }
         }
@@ -133,6 +143,67 @@ public class GameController {
         }
 
         return "game-promote";
+    }
+
+    @PostMapping("/resigning/{gameId}")
+    public String ResigningGame(@PathVariable final Long gameId) {
+        Optional<Game> game = games.findById(gameId);
+        if (game.isPresent()) {
+            // TODO Player Loose the game
+        }
+
+            return INDEX_REDIRECTION;
+        }
+
+
+
+    @GetMapping("/passant/{gameId}/{pawnId}/{x}/{y}")
+    public String PriseEnPassant(
+                                 @PathVariable final Long gameId,
+                                 @PathVariable final Long pawnId,
+                                 @PathVariable final Integer x,
+                                 @PathVariable final Integer y
+    ) {
+        Optional<Game> game = games.findById(gameId);
+        if (game.isPresent()) {
+            // change the coordinate of the moved pawn to the new position
+            Figure f = figures.getOne(pawnId);
+            if (f.getOwner() == game.get().getCurrentPlayer()) {
+
+                int dy = Arrays.asList(-1, 1).get(f.getOwner());
+                // y offset
+                int py = f.getY() + dy;
+                if (Math.abs(x - f.getX()) == 1 && y == py) { // the move is in diagonal
+                    if (gameService.checkEnPassant(game.get(), f, x, y)) {
+                        Figure f2 = figures.getOne((game.get().getCurrentPlayer() == 0 ? game.get().getFigureAt(x, y + 1).getId() : game.get().getFigureAt(x, y - 1).getId()));
+                        figures.delete(f2);
+
+                        f.setX(x);
+                        f.setY(y);
+                        f.updateCountPlayed();
+
+                        figures.save(f);
+                        logger.info("figure moved");
+
+                        // save the move
+                        Move m = new Move();
+                        m.setCode(f.getMoveCode());
+                        m.setPlayer(game.get().getCurrentPlayer());
+
+                        moves.save(m);
+
+
+                        // change player
+                        Game g = game.get();
+                        g.getGrid().remove(f2);
+                        g.changePlayer();
+                        games.save(g);
+                    }
+                }
+            }
+            return GAME_REDIRECTION + game.get().getId();
+        }
+        return INDEX_REDIRECTION;
     }
 
     @GetMapping("/move/{gameId}/{pawnId}/{x}/{y}")
@@ -170,10 +241,14 @@ public class GameController {
                     g.changePlayer();
                     games.save(g);
 
+
+
                     // pawn promotion
                     if (gameService.enablePromotePawn(f)) {
                         return "redirect:/game/promote/" + game.get().getId() + "/" + f.getId();
                     }
+                }else if(f.getName().equals("pawn")) {
+                    return "redirect:/game/passant/" + game.get().getId() + "/" + f.getId() + "/" + x + "/" + y;
                 }
             } else {
                 //TODO throw exception and inform the view
@@ -219,7 +294,12 @@ public class GameController {
                     m.setPlayer(game.get().getCurrentPlayer());
 
                     moves.save(m);
-
+                    logger.info("Bool echec " +gameService.checkEchec(game.get()));
+                    if (gameService.checkEchec(game.get())) {
+                        game.get().setEchec(1);
+                    } else {
+                        game.get().setEchec(0);
+                    }
                     // change player
                     Game g = game.get();
                     g.changePlayer();

@@ -51,6 +51,9 @@ public class Game {
     @Column
     private Long blackKingId;
 
+    @Column
+    private Integer echec =0;
+
 
     public Long getId() {
         return id;
@@ -58,6 +61,14 @@ public class Game {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getEchec() {
+        return echec;
+    }
+
+    public void setEchec(int echec) {
+        this.echec = echec;
     }
 
     public List<Figure> getGrid() {

@@ -58,6 +58,10 @@
     font-weight: bold;
 }
 
+#leave {
+    float : right;
+}
+
 @media only screen and (max-width: 1200px) {
     .cell {
         height: 65px;

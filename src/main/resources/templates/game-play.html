@@ -7,31 +7,57 @@
 <div th:fragment="content" th:id="'game'+${game.getId()}">
     <h1 class="text-center">Welcome to Chess</h1>
     <div class="container-fluid">
+        <button type="button" class="btn btn-dark" id="leave" data-toggle="modal" data-target="#LeaveGame">Leave
+        </button>
         <h2>Game <span th:text="${game.getId()}"></span></h2>
         <ul>
             <li>Player <span>1</span> is
                 <span class="bold">Black</span>
-                 (<span th:text="${game.getNumberOfPlay(1)}">0</span> moves)
+                (<span th:text="${game.getNumberOfPlay(1)}">0</span> moves)
             </li>
             <li>Player <span>2</span> is
                 <span class="bold">White</span>
-                 (<span th:text="${game.getNumberOfPlay(0)}">0</span> moves)
+                (<span th:text="${game.getNumberOfPlay(0)}">0</span> moves)
             </li>
         </ul>
         <h4><span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}">Black</span> player your turn !</h4>
         <h5 th:text="${error_msg}" class="alert-message">A message appear !</h5>
     </div>
-        <h2 th:if="${echec && !(mate)}" class="text-center">ECHEC</h2>
-        <h2 th:if="${mate}" class="text-center" id="mate">ECHEC ET MATE</h2>
+    <h2 th:if="${game.getEchec() == 1 && !(mate)}" class="text-center">Échecs au Roi</h2>
+    <h2 th:if="${mate}" class="text-center" id="mate">ECHEC ET MATE</h2>
     <div class="flex-container">
         <table id="board">
             <tr th:each="y: ${#numbers.sequence(0, game.WIDTH - 1)}" class="line">
-                <td th:each="x: ${#numbers.sequence(0, game.WIDTH - 1)}" class="cell ui-droppable" th:classappend="|${(x % 2 == y % 2) ? 'odd' : 'even' } ${(game.getFigureAt(x, y) != null) ? 'disabled' : ''} |" th:attr="data-x=${x}, data-y=${y}">
-                    <div th:if="${game.getFigureAt(x, y) != null}" th:utext="${game.getFigureAt(x, y).getHtmlCode()}" th:attr="data-id=${game.getFigureAt(x, y).getId()}" class="figure ui-draggable" th:classappend="|${(game.getFigureAt(x,y).getOwner() == 0) ? 'white' : 'black' }|" style="position: relative;">♜</div>
+                <td th:each="x: ${#numbers.sequence(0, game.WIDTH - 1)}" class="cell ui-droppable"
+                    th:classappend="|${(x % 2 == y % 2) ? 'odd' : 'even' } ${(game.getFigureAt(x, y) != null) ? 'disabled' : ''} |"
+                    th:attr="data-x=${x}, data-y=${y}">
+                    <div th:if="${game.getFigureAt(x, y) != null}" th:utext="${game.getFigureAt(x, y).getHtmlCode()}"
+                         th:attr="data-id=${game.getFigureAt(x, y).getId()}" class="figure ui-draggable"
+                         th:classappend="|${(game.getFigureAt(x,y).getOwner() == 0) ? 'white' : 'black' }|"
+                         style="position: relative;">♜
+                    </div>
                 </td>
             </tr>
         </table>
-
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="LeaveGame" tabindex="-1" role="dialog" aria-labelledby="LeaveTheGame"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Leave the game</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure ?</p>
+                    <a class="btn btn-danger text-white" onclick="leaveGame();">Yes</a>
+                    <a class="btn btn-secondary text-white" data-dismiss="modal">Close</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

@@ -73,4 +73,9 @@ if ($(location).attr('href').split('/')[4] === "promote") {
     $('#promotionModal').modal('toggle');
 }
 
+function leaveGame() {
+    let gameId = $(location).attr('href').split('/')[5]; // http://localhost:8080/game/play/{id}
+    window.location.href = '/game/resigning/' + gameId;
+}
+
 console.log("js fully loaded");
