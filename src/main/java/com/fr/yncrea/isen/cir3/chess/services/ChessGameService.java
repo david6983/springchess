@@ -272,56 +272,58 @@ public class ChessGameService {
 
 
     public boolean checkEchec(Game game) {
-        int xKing, yKing;
-        int player = game.getCurrentPlayer();
-        boolean response = false;
-        if (player == 0) {
-            xKing = game.getFigureById(game.getWhiteKingId()).getX();
-            yKing = game.getFigureById(game.getWhiteKingId()).getY();
-        } else {
-            xKing = game.getFigureById(game.getBlackKingId()).getX();
-            yKing = game.getFigureById(game.getBlackKingId()).getY();
-        }
-        for (int i = 0; i < Game.WIDTH; i++) {
-            for (int j = 0; j < Game.WIDTH; j++) {
-                if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getOwner() != player) {
-                    if(response){
-                        System.out.println("ECHEC " + FigureName.stringToFigureName(game.getFigureAt(i, j).getName()));
-                        return true;
+        if (game.getFigureById(game.getWhiteKingId()) != null && game.getFigureById(game.getBlackKingId()) != null) {
+            int xKing, yKing;
+            int player = game.getCurrentPlayer();
+            boolean response = false;
+            if (player == 0) {
+                xKing = game.getFigureById(game.getWhiteKingId()).getX();
+                yKing = game.getFigureById(game.getWhiteKingId()).getY();
+            } else {
+                xKing = game.getFigureById(game.getBlackKingId()).getX();
+                yKing = game.getFigureById(game.getBlackKingId()).getY();
+            }
+            for (int i = 0; i < Game.WIDTH; i++) {
+                for (int j = 0; j < Game.WIDTH; j++) {
+                    if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getOwner() != player) {
+                        if (response) {
+                            System.out.println("ECHEC " + FigureName.stringToFigureName(game.getFigureAt(i, j).getName()));
+                            return true;
+                        } else
+                            response = checkAny(game, game.getFigureAt(i, j), xKing, yKing);
                     }
-                    else
-                        response = checkAny(game, game.getFigureAt(i, j), xKing, yKing);
                 }
             }
         }
-
         return false;
     }
 
-    public Boolean checkMate(Game game){
-        int xKing, yKing;
-        int player = game.getCurrentPlayer();
-        boolean response = false;
-        if (player == 1) {
-            xKing = game.getFigureById(game.getWhiteKingId()).getX();
-            yKing = game.getFigureById(game.getWhiteKingId()).getY();
-        } else {
-            xKing = game.getFigureById(game.getBlackKingId()).getX();
-            yKing = game.getFigureById(game.getBlackKingId()).getY();
-        }
-        for (int i = 0; i < Game.WIDTH; i++) {
-            for (int j = 0; j < Game.WIDTH; j++) {
-                if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getOwner() == player) {
-                    if(response){
-                        System.out.println("MATE " + FigureName.stringToFigureName(game.getFigureAt(i, j).getName()));
-                        return true;
+    public Boolean checkMate(Game game) {
+        if (game.getFigureById(game.getWhiteKingId()) != null && game.getFigureById(game.getBlackKingId()) != null) {
+            int xKing, yKing;
+            int player = game.getCurrentPlayer();
+            boolean response = false;
+            if (player == 1) {
+                xKing = game.getFigureById(game.getWhiteKingId()).getX();
+                yKing = game.getFigureById(game.getWhiteKingId()).getY();
+            } else {
+                xKing = game.getFigureById(game.getBlackKingId()).getX();
+                yKing = game.getFigureById(game.getBlackKingId()).getY();
+            }
+            for (int i = 0; i < Game.WIDTH; i++) {
+                for (int j = 0; j < Game.WIDTH; j++) {
+                    if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getOwner() == player) {
+                        if (response) {
+                            System.out.println("MATE " + FigureName.stringToFigureName(game.getFigureAt(i, j).getName()));
+                            return true;
+                        } else
+                            response = checkAny(game, game.getFigureAt(i, j), xKing, yKing);
                     }
-                    else
-                        response = checkAny(game, game.getFigureAt(i, j), xKing, yKing);
                 }
             }
+        }else {
+            return true;
         }
-
         return false;
     }
 

@@ -20,7 +20,7 @@ $(function (e) {
 
     $('.cell').droppable({
         accept: function (el) {
-            return el.hasClass(turnText.toLowerCase());
+            return el.hasClass(turnText.toLowerCase()) && ($('#mate').length <= 0);
         },
         tolerance: 'intersect',
         over: function () {

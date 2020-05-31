@@ -81,8 +81,10 @@ public class GameController {
         if (game.isPresent()) {
             model.addAttribute("game", game.get());
             model.addAttribute("error_msg", "");
-            System.out.println("Bool echec " +gameService.checkEchec(game.get()));
-            System.out.println("Bool mate " + gameService.checkMate(game.get()));
+            logger.info("Bool echec " +gameService.checkEchec(game.get()));
+            logger.info("Bool mate " + gameService.checkMate(game.get()));
+            model.addAttribute("echec", gameService.checkEchec(game.get()));
+            model.addAttribute("mate", gameService.checkMate(game.get()));
             return "game-play";
         }
         logger.info("game {} not found for route /play/{}", id, id);
