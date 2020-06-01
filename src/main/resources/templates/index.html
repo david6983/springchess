@@ -1,4 +1,5 @@
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::content})}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      th:replace="~{layout :: layout(~{::title}, ~{::content})}">
 <head>
     <title th:fragment="title">Chess v1.0</title>
 </head>
@@ -6,5 +7,10 @@
 <!--/* Main page (index) */-->
 <div th:fragment="content">
     <h1 class="text-center">Index</h1>
+    <div class="container-fluid">
+        <div sec:authorize="isAuthenticated()">
+            Bonjour <span sec:authentication="name"></span>&nbsp;(<a th:href="@{/logout}" href="#">Déconnexion</a>)
+        </div>
+    </div>
 </div>
 </body>
