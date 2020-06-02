@@ -6,10 +6,18 @@
 <body>
 <!--/* Main page (index) */-->
 <div th:fragment="content">
-    <h1 class="text-center">Index</h1>
+    <h1 class="text-center m-3">My Profile</h1>
     <div class="container-fluid">
         <div sec:authorize="isAuthenticated()">
-            Bonjour <span sec:authentication="name"></span>&nbsp;(<a th:href="@{/logout}" href="#">Déconnexion</a>)
+            Welcome back <span sec:authentication="name"></span>&nbsp;(<a th:href="@{/logout}" href="#">Log out</a>)
+        </div>
+        <div class="row">
+            <div class="col">
+
+            </div>
+            <div class="col">
+
+            </div>
         </div>
     </div>
 </div>
