@@ -1,11 +1,9 @@
 package com.fr.yncrea.isen.cir3.chess.controller;
 
-import com.fr.yncrea.isen.cir3.chess.domain.Figure;
-import com.fr.yncrea.isen.cir3.chess.domain.FigureName;
-import com.fr.yncrea.isen.cir3.chess.domain.Game;
-import com.fr.yncrea.isen.cir3.chess.domain.Move;
+import com.fr.yncrea.isen.cir3.chess.domain.*;
 import com.fr.yncrea.isen.cir3.chess.form.PromoteForm;
 import com.fr.yncrea.isen.cir3.chess.repository.FigureRepository;
+import com.fr.yncrea.isen.cir3.chess.repository.GameListRepository;
 import com.fr.yncrea.isen.cir3.chess.repository.GameRepository;
 import com.fr.yncrea.isen.cir3.chess.repository.MoveRepository;
 import com.fr.yncrea.isen.cir3.chess.services.ChessGameService;
@@ -40,6 +38,9 @@ public class GameController {
 
     @Autowired
     private GameRepository games;
+
+    @Autowired
+    private GameListRepository gamesList;
 
     @Autowired
     private MoveRepository moves;
@@ -82,13 +83,7 @@ public class GameController {
         if (game.isPresent()) {
             model.addAttribute("game", game.get());
             model.addAttribute("error_msg", "");
-//            logger.info("Bool echec " +gameService.checkEchec(game.get()));
-//            if (gameService.checkEchec(game.get())) {
-//                game.get().setEchec(1);
-//            } else {
-//                game.get().setEchec(0);
-//            }
-//            games.save(game.get());
+
             logger.info("Bool echec " + gameService.checkEchec(game.get()));
             if (gameService.checkEchec(game.get())) {
                 game.get().setEchec(1);
@@ -97,6 +92,11 @@ public class GameController {
             }
             logger.info("Bool mate " + gameService.checkMate(game.get()));
             model.addAttribute("mate", gameService.checkMate(game.get()));
+
+            if(gamesList.findByGameId(id) != null)
+                model.addAttribute("gameList", gamesList.findByGameId(id));
+
+
             return "game-play";
         }
         logger.info("game {} not found for route /play/{}", id, id);
@@ -152,17 +152,31 @@ public class GameController {
             // TODO Player Loose the game
         }
 
-            return INDEX_REDIRECTION;
+        return INDEX_REDIRECTION;
+    }
+
+    @GetMapping("/endgame/{gameId}/{winner}/{looser}")
+    public String EndGame(@PathVariable final Long gameId,
+                          @PathVariable final String winner,
+                          @PathVariable final String looser) {
+        if(gamesList.findByGameId(gameId) == null) {
+            GameList gameList = new GameList();
+            gameList.setWinner(winner);
+            gameList.setLooser(looser);
+            gameList.setGameId(gameId);
+            gamesList.save(gameList);
         }
 
+        return GAME_REDIRECTION + gameId;
+    }
 
 
     @GetMapping("/passant/{gameId}/{pawnId}/{x}/{y}")
     public String PriseEnPassant(
-                                 @PathVariable final Long gameId,
-                                 @PathVariable final Long pawnId,
-                                 @PathVariable final Integer x,
-                                 @PathVariable final Integer y
+            @PathVariable final Long gameId,
+            @PathVariable final Long pawnId,
+            @PathVariable final Integer x,
+            @PathVariable final Integer y
     ) {
         Optional<Game> game = games.findById(gameId);
         if (game.isPresent()) {
@@ -177,6 +191,9 @@ public class GameController {
                     if (gameService.checkEnPassant(game.get(), f, x, y)) {
                         Figure f2 = figures.getOne((game.get().getCurrentPlayer() == 0 ? game.get().getFigureAt(x, y + 1).getId() : game.get().getFigureAt(x, y - 1).getId()));
                         figures.delete(f2);
+                        Move m = new Move();
+                        m.setPositionStart(f.getMoveCode());
+
 
                         f.setX(x);
                         f.setY(y);
@@ -186,12 +203,10 @@ public class GameController {
                         logger.info("figure moved");
 
                         // save the move
-                        Move m = new Move();
-                        m.setCode(f.getMoveCode());
+                        m.setPositionEnd(f.getMoveCode());
                         m.setPlayer(game.get().getCurrentPlayer());
 
                         moves.save(m);
-
 
                         // change player
                         Game g = game.get();
@@ -222,6 +237,9 @@ public class GameController {
             if (f.getOwner() == game.get().getCurrentPlayer()) {
                 // check the movement
                 if (gameService.checkAny(game.get(), f, x, y)) {
+                    Move m = new Move();
+                    m.setPositionStart(f.getMoveCode());
+
                     f.setX(x);
                     f.setY(y);
                     f.updateCountPlayed();
@@ -230,8 +248,7 @@ public class GameController {
                     logger.info("figure moved");
 
                     // save the move
-                    Move m = new Move();
-                    m.setCode(f.getMoveCode());
+                    m.setPositionEnd(f.getMoveCode());
                     m.setPlayer(game.get().getCurrentPlayer());
 
                     moves.save(m);
@@ -241,13 +258,11 @@ public class GameController {
                     g.changePlayer();
                     games.save(g);
 
-
-
                     // pawn promotion
                     if (gameService.enablePromotePawn(f)) {
                         return "redirect:/game/promote/" + game.get().getId() + "/" + f.getId();
                     }
-                }else if(f.getName().equals("pawn")) {
+                } else if (f.getName().equals("pawn")) {
                     return "redirect:/game/passant/" + game.get().getId() + "/" + f.getId() + "/" + x + "/" + y;
                 }
             } else {
@@ -278,6 +293,9 @@ public class GameController {
             if (f1.getOwner() == game.get().getCurrentPlayer() && f1.getOwner() != f2.getOwner()) {
                 // check the movement
                 if (gameService.checkAny(game.get(), f1, f2.getX(), f2.getY())) {
+                    Move m = new Move();
+                    m.setPositionStart(f1.getMoveCode());
+                    
                     f1.setX(f2.getX());
                     f1.setY(f2.getY());
                     f1.updateCountPlayed();
@@ -289,12 +307,11 @@ public class GameController {
                     logger.info("figure f2 deleted");
 
                     // save the move
-                    Move m = new Move();
-                    m.setCode(f1.getMoveCode());
+                    m.setPositionEnd(f1.getMoveCode());
                     m.setPlayer(game.get().getCurrentPlayer());
 
                     moves.save(m);
-                    logger.info("Bool echec " +gameService.checkEchec(game.get()));
+                    logger.info("Bool echec " + gameService.checkEchec(game.get()));
                     if (gameService.checkEchec(game.get())) {
                         game.get().setEchec(1);
                     } else {

@@ -11,20 +11,22 @@
         </button>
         <h2>Game <span th:text="${game.getId()}"></span></h2>
         <ul>
-            <li>Player <span>1</span> is
+            <li><span id="Player1">Player 1</span> is
                 <span class="bold">Black</span>
                 (<span th:text="${game.getNumberOfPlay(1)}">0</span> moves)
             </li>
-            <li>Player <span>2</span> is
+            <li><span id="Player2">Player 2</span> is
                 <span class="bold">White</span>
                 (<span th:text="${game.getNumberOfPlay(0)}">0</span> moves)
             </li>
         </ul>
+        <h4 class="Timer"></h4>
         <h4><span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}">Black</span> player your turn !</h4>
         <h5 th:text="${error_msg}" class="alert-message">A message appear !</h5>
     </div>
-    <h2 th:if="${game.getEchec() == 1 && !(mate)}" class="text-center">Échecs au Roi</h2>
-    <h2 th:if="${mate}" class="text-center" id="mate">ECHEC ET MATE</h2>
+    <h3 th:if="${game.getEchec() == 1 && !(mate)}" class="text-center">Échecs au Roi</h3>
+    <h3 th:if="${mate}" class="text-center" id="mate">ECHEC ET MATE</h3>
+    <h2 th:if="${gameList}" class="text-center" id="winner">Winner is <span th:text="${gameList.getWinner()}" >Player 1</span></h2>
     <div class="flex-container">
         <table id="board">
             <tr th:each="y: ${#numbers.sequence(0, game.WIDTH - 1)}" class="line">

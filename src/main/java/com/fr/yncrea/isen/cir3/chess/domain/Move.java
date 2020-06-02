@@ -11,7 +11,10 @@ public class Move {
     private Long id;
 
     @Column
-    private String code;
+    private String positionEnd;
+
+    @Column
+    private String positionStart;
 
     @Column
     private Integer player;
@@ -24,12 +27,20 @@ public class Move {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getPositionEnd() {
+        return positionEnd;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setPositionEnd(String positionEnd) {
+        this.positionEnd = positionEnd;
+    }
+
+    public String getPositionStart() {
+        return positionStart;
+    }
+
+    public void setPositionStart(String positionStart) {
+        this.positionStart = positionStart;
     }
 
     public Integer getPlayer() {
