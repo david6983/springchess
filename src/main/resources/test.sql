@@ -1,0 +1,3 @@
+CREATE DATABASE springchess;
+CREATE ROLE springchess WITH LOGIN PASSWORD 'springchess';
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO springchess;
