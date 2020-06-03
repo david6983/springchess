@@ -45,7 +45,7 @@
                             </div>
                             <div class="col-sm text-center m-1">
                                 <a href="#" class="btn btn-primary" role="button" >
-                                    <span>Create game</span>
+                                    <span class="oi oi-media-play" title="Delete" aria-hidden="true"></span>
                                 </a>
                             </div>
                             <div class="col-sm m-1 text-center">
@@ -60,8 +60,8 @@
                         </div>
                     </li>
                 </ul>
-                <div th:if="${friends.isEmpty()}">Start searching friends to create a game !</div>
-                <div th:if="${friends.isEmpty() and friend_requests.isEmpty()}">You can accept pending friend requests to start a game</div>
+                <div th:if="${friends.isEmpty() && friend_requests.isEmpty()}">Start searching friends to create a game !</div>
+                <div th:if="${friends.isEmpty() && !friend_requests.isEmpty()}">You can accept pending friend requests to start a game</div>
             </div>
             <div class="col-sm">
                 <h2 class="mt-4 mb-4">My Friends request</h2>

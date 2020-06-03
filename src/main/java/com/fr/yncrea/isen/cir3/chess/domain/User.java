@@ -1,13 +1,9 @@
 package com.fr.yncrea.isen.cir3.chess.domain;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "chess_user")
@@ -29,8 +25,19 @@ public class User implements UserDetails {
     @Transient
     private String confirmPassword;
 
+    @Column
+    private Boolean isLogIn = false;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Authority> authorities;
+
+    public Boolean getLogIn() {
+        return isLogIn;
+    }
+
+    public void setLogIn(Boolean logIn) {
+        isLogIn = logIn;
+    }
 
     public Long getId() {
         return id;
