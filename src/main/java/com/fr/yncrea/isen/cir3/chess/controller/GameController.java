@@ -120,6 +120,8 @@ public class GameController {
                 model.addAttribute("game", game.get());
                 model.addAttribute("error_msg", "");
                 model.addAttribute("figure", fig.get());
+                model.addAttribute("time", gameService.getTimeElapsed(game.get().getGameTime()));
+                model.addAttribute("time_move", gameService.getTimeElapsed(game.get().getTimeCurrentPlayer()));
                 return "game-promote";
             }
         }
