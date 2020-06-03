@@ -1,5 +1,14 @@
 language: java
 jdk: oraclejdk11
 
+services:
+  - postgresql
+
+before_script:
+  - psql --version
+  - psql -c "CREATE DATABASE springchess;" -U postgres
+  - psql -c "CREATE ROLE springchess WITH LOGIN PASSWORD 'springchess';" -U postgres
+  - psql -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO springchess;" -U postgres
+
 script:
   - ./mvnw test
