@@ -31,9 +31,20 @@
     <h2 th:if="${gameList}" class="text-center" id="winner">Winner is <span th:text="${gameList.getWinner()}" >Player 1</span></h2>
     <div class="flex-container">
         <table id="board">
-            <tr th:each="y: ${#numbers.sequence(0, game.WIDTH - 1)}" class="line">
+            <tr th:if="${game.getCurrentPlayer() == 0}" th:each="y: ${#numbers.sequence(0, game.WIDTH - 1)}" class="line">
                 <td th:each="x: ${#numbers.sequence(0, game.WIDTH - 1)}" class="cell ui-droppable"
                     th:classappend="|${(x % 2 == y % 2) ? 'odd' : 'even' } ${(game.getFigureAt(x, y) != null) ? 'disabled' : ''} |"
+                    th:attr="data-x=${x}, data-y=${y}">
+                    <div th:if="${game.getFigureAt(x, y) != null}" th:utext="${game.getFigureAt(x, y).getHtmlCode()}"
+                         th:attr="data-id=${game.getFigureAt(x, y).getId()}" class="figure ui-draggable"
+                         th:classappend="|${(game.getFigureAt(x,y).getOwner() == 0) ? 'white' : 'black' }|"
+                         style="position: relative;">♜
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${game.getCurrentPlayer() == 1}" th:each="y: ${#numbers.sequence(game.WIDTH - 1, 0, -1)}" class="line">
+                <td th:each="x: ${#numbers.sequence(0, game.WIDTH - 1)}" class="cell ui-droppable"
+                    th:classappend="|${(x % 2 == y % 2) ? 'even' : 'odd' } ${(game.getFigureAt(x, y) != null) ? 'disabled' : ''} |"
                     th:attr="data-x=${x}, data-y=${y}">
                     <div th:if="${game.getFigureAt(x, y) != null}" th:utext="${game.getFigureAt(x, y).getHtmlCode()}"
                          th:attr="data-id=${game.getFigureAt(x, y).getId()}" class="figure ui-draggable"
