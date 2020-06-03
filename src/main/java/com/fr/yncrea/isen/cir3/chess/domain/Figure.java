@@ -43,7 +43,7 @@ public class Figure {
         this.id = id;
     }
 
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
@@ -53,7 +53,7 @@ public class Figure {
         }
     }
 
-    public int getX() {
+    public Integer getX() {
         return x;
     }
 
@@ -63,7 +63,7 @@ public class Figure {
         }
     }
 
-    public int getY() {
+    public Integer getY() {
         return y;
     }
 

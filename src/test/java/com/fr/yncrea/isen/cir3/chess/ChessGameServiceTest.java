@@ -59,12 +59,39 @@ public class ChessGameServiceTest {
 
     @Test
     public void checkRookTest() {
+        // move the pawn in front of the left rook for testing
+        game.getFigureAt(0, 6).setY(4);
 
+        // can go forward
+        assertThat(service.checkRook(game, 0, 7, 0, 5)).isTrue();
+
+        // can go back
+        assertThat(service.checkRook(game, 3, 4, 3, 5)).isTrue();
+
+        // can go left
+        assertThat(service.checkRook(game, 3, 4, 2, 4)).isTrue();
+
+        // can go right
+        assertThat(service.checkRook(game, 3, 4, 4, 4)).isTrue();
+
+        // can't go outside the map
+        assertThat(service.checkRook(game, 4, 4, -1, -1)).isFalse();
+
+        // can't go in diagonal
+        assertThat(service.checkRook(game, 3, 3, 4, 4)).isFalse();
     }
 
     @Test
     public void checkQueenTest() {
+        // forward
 
+        // backward
+
+        // left
+
+        // right
+
+        //
     }
 
     @Test
