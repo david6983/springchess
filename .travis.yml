@@ -1,8 +1,5 @@
 language: java
 jdk: oraclejdk11
 
-services:
-  - postgresql
-
-before_script:
-  - psql -c 'create database springchess;' -U postgres
+script:
+  - ./mvnw test
