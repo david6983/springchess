@@ -1,9 +1,13 @@
 package com.fr.yncrea.isen.cir3.chess.domain;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "chess_user")
@@ -95,4 +99,5 @@ public class User implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

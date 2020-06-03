@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Service
@@ -49,7 +50,6 @@ public class DbUserDetailsService implements UserDetailsService {
         user.setEmail(userForm.getEmail());
         user.setPassword(passwordEncoder.encode(userForm.getPassword()));
         user.setAuthorities(Collections.singletonList(roleRepository.findByAuthority("ROLE_USER")));
-
         users.save(user);
     }
 

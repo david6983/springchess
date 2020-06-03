@@ -7,16 +7,92 @@
 <!--/* Main page (index) */-->
 <div th:fragment="content">
     <h1 class="text-center m-3">My Profile</h1>
-    <div class="container-fluid">
-        <div sec:authorize="isAuthenticated()">
-            Welcome back <span sec:authentication="name"></span>&nbsp;(<a th:href="@{/logout}" href="#">Log out</a>)
-        </div>
-        <div class="row">
-            <div class="col">
-
+    <div sec:authorize="isAuthenticated()" class="container-fluid">
+        <h2 class="mt-4 mb-4">About me</h2>
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 th:text="${user.getUsername()}" class="card-title">Mourad</h5>
+                <h6 th:text="${user.getEmail()}" class="card-subtitle mb-2 text-muted">moumou.rad@gmail.com</h6>
+                <h6 th:text="Player" class="card-subtitle mb-2 text-muted">Player</h6>
+                <a th:href="@{/logout}" href="#" class="card-link">Log out</a>
             </div>
-            <div class="col">
-
+        </div>
+        <h2 class="mt-4 mb-4">My 10 last game</h2>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Winner</th>
+                <th scope="col">Looser</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-sm">
+                <h2 class="mt-4 mb-4">My Friends</h2>
+                <ul th:if="${!friends.isEmpty()}" class="list-group">
+                    <li class="list-group-item">
+                        <div th:each="friend: ${friends}" class="row">
+                            <div class="col-sm font-weight-bold text-uppercase text-center m-1">
+                                <span th:text="${friend.getSender()}">Bilel</span>
+                            </div>
+                            <div class="col-sm text-center m-1">
+                                <a href="#" class="btn btn-primary" role="button" >
+                                    <span>Create game</span>
+                                </a>
+                            </div>
+                            <div class="col-sm m-1 text-center">
+                                <form method="get" th:action="@{/friends/delete}">
+                                    <input type="hidden" th:name="userId" th:value="${user.getId()}">
+                                    <input type="hidden" th:name="username" th:value="${friend.getSender()}">
+                                    <button class="btn btn-danger" type="submit">
+                                        <span class="oi oi-delete" title="Delete" aria-hidden="true"></span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div th:if="${friends.isEmpty()}">Start searching friends to create a game !</div>
+                <div th:if="${friends.isEmpty() and friend_requests.isEmpty()}">You can accept pending friend requests to start a game</div>
+            </div>
+            <div class="col-sm">
+                <h2 class="mt-4 mb-4">My Friends request</h2>
+                <ul th:if="${!friend_requests.isEmpty()}" class="list-group">
+                    <li class="list-group-item">
+                        <div th:each="req: ${friend_requests}" class="row">
+                            <div class="col-sm font-weight-bold text-uppercase text-center m-1">
+                                <span th:text="${req.getSender()}">Bilel</span>
+                            </div>
+                            <div class="col-sm text-center m-2">
+                                <form method="get" th:action="@{/friends/accept}">
+                                    <input type="hidden" th:name="userId" th:value="${user.getId()}">
+                                    <input type="hidden" th:name="username" th:value="${req.getSender()}">
+                                    <button class="btn btn-success" type="submit">
+                                        <span class="oi oi-check" title="accept" aria-hidden="true"></span>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-sm m-1" style="text-align: end;">
+                                <form method="get" th:action="@{/friends/decline}">
+                                    <input type="hidden" th:name="userId" th:value="${user.getId()}">
+                                    <input type="hidden" th:name="username" th:value="${req.getSender()}">
+                                    <button class="btn btn-danger" type="submit">
+                                        <span class="oi oi-delete" title="decline" aria-hidden="true"></span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div th:if="${friend_requests.isEmpty()}">No pending request for now</div>
             </div>
         </div>
     </div>
