@@ -44,7 +44,30 @@
             </tr>
         </table>
     </div>
-    <!-- Modal -->
+    <!-- List of moves -->
+    <div class="container-fluid mt-5">
+        <h3 class="mb-4">Liste of moves</h3>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Player</th>
+                    <th scope="col">Start</th>
+                    <th scope="col">End</th>
+                    <th scope="col">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="move: ${game.getMoves()}">
+                    <th scope="row" th:text="${move.getPlayer() == 1 ? 'Black' : 'White'}">1</th>
+                    <td th:text="${move.getPositionStart()}">E4</td>
+                    <td th:text="${move.getPositionEnd()}">B6</td>
+                    <td><span th:text="${move.getTime()}">3</span> s</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Leave modal -->
     <div class="modal fade" id="LeaveGame" tabindex="-1" role="dialog" aria-labelledby="LeaveTheGame"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">

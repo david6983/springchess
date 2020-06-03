@@ -22,6 +22,9 @@ public class Move {
     @Column
     private Long time;
 
+    @ManyToOne
+    private Game game;
+
     public Long getTime() {
         return time;
     }
@@ -60,5 +63,13 @@ public class Move {
 
     public void setPlayer(Integer player) {
         this.player = player;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }

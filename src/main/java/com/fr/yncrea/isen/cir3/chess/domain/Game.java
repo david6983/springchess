@@ -42,6 +42,9 @@ public class Game {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "game")
     private List<Figure> grid;
 
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "game")
+    private List<Move> moves;
+
     @Column(nullable = false)
     private Integer currentPlayer = START_PLAYER;
 
@@ -131,6 +134,14 @@ public class Game {
 
     public void setGameTime() {
         this.gameTime = System.currentTimeMillis();
+    }
+
+    public List<Move> getMoves() {
+        return moves;
+    }
+
+    public void setMoves(List<Move> moves) {
+        this.moves = moves;
     }
 
     public Long getTimeWhitePlayer() {

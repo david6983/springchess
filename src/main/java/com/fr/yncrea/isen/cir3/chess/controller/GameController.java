@@ -260,6 +260,7 @@ public class GameController {
                     m.setPositionEnd(f.getMoveCode());
                     m.setPlayer(game.get().getCurrentPlayer());
                     m.setTime(gameService.getTimeElapsed(game.get().getTimeCurrentPlayer()));
+                    m.setGame(game.get());
 
                     moves.save(m);
 
@@ -267,6 +268,7 @@ public class GameController {
                     Game g = game.get();
                     g.changePlayer();
                     g.setTimeCurrentPlayer(System.currentTimeMillis());
+                    g.getMoves().add(m);
                     games.save(g);
 
                     // pawn promotion
@@ -321,6 +323,7 @@ public class GameController {
                     m.setPositionEnd(f.getMoveCode());
                     m.setPlayer(game.get().getCurrentPlayer());
                     m.setTime(gameService.getTimeElapsed(game.get().getTimeCurrentPlayer()));
+                    m.setGame(game.get());
 
                     moves.save(m);
                     logger.info("Bool echec " + gameService.checkEchec(game.get()));
@@ -333,6 +336,7 @@ public class GameController {
                     Game g = game.get();
                     g.changePlayer();
                     g.setTimeCurrentPlayer(System.currentTimeMillis());
+                    g.getMoves().add(m);
 
                     // delete figure f2
                     g.getGrid().remove(f2);
