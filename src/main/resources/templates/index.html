@@ -9,8 +9,43 @@
     <h1 class="text-center">Index</h1>
     <div class="container-fluid">
         <div sec:authorize="isAuthenticated()">
-            Bonjour <span sec:authentication="name"></span>&nbsp;(<a th:href="@{/logout}" href="#">Déconnexion</a>)
+            Hello <span sec:authentication="name"></span>&nbsp;(<a th:href="@{/logout}" href="#">Déconnexion</a>)
         </div>
     </div>
+
+    <p>
+        <a th:href="@{/addFriend}" class="btn btn-secondary" role="button" aria-pressed="true">Add a friend</a>
+    </p>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>Username of friend</th>
+            <th>Delete it</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}" th:object="${user}">
+            <td th:text="${username}"></td>
+            <td>
+                <a th:href="@{|/delete/*{id}|}" class="btn btn-danger" role="button">
+                    <span class="oi oi-delete" title="delete" aria-hidden="true"></span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Start a game with</h2>
+
+  <form action="#" th:action="@{/startGame}" th:object="${user}" method="post">
+        <select th:field="*{id}">
+            <option th:each="user : ${users}" th:value="${username}" th:text="${username}"></option>
+        </select>
+        <p>
+            <input type="submit" class="btn btn-secondary" value="Submit"/>
+        </p>
+    </form>
+
 </div>
 </body>
