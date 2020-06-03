@@ -35,6 +35,17 @@ public class Figure {
     @ManyToOne
     private Game game;
 
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "figure")
+    private Suggestion suggestion;
+
+    public Suggestion getSuggestion() {
+        return suggestion;
+    }
+
+    public void setSuggestion(Suggestion suggestion) {
+        this.suggestion = suggestion;
+    }
+
     public Long getId() {
         return id;
     }
