@@ -19,6 +19,17 @@ public class Move {
     @Column
     private Integer player;
 
+    @Column
+    private Long time;
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
     public Long getId() {
         return id;
     }

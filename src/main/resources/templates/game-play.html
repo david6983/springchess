@@ -19,6 +19,8 @@
                 <span class="bold">White</span>
                 (<span th:text="${game.getNumberOfPlay(0)}">0</span> moves)
             </li>
+            <li>Total elapsed time : <span id="time" th:text="${time}">1</span> s</li>
+            <li>Move elapsed time : <span id="time_move" th:text="${time_move}">1</span> s</li>
         </ul>
         <h4 class="Timer"></h4>
         <h4><span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}">Black</span> player your turn !</h4>

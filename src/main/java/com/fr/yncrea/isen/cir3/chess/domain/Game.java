@@ -52,8 +52,16 @@ public class Game {
     private Long blackKingId;
 
     @Column
-    private Integer echec =0;
+    private Integer echec = 0;
 
+    @Column
+    private Long timeWhitePlayer;
+
+    @Column
+    private Long timeBlackPlayer;
+
+    @Column
+    private Long gameTime;
 
     public Long getId() {
         return id;
@@ -105,6 +113,48 @@ public class Game {
 
     public void setBlackKingId(Long blackKingId) {
         this.blackKingId = blackKingId;
+    }
+
+    public Long getTimeCurrentPlayer() {
+        if (currentPlayer == PlayerName.WHITE.ordinal()) {
+            return timeWhitePlayer;
+        } else if (currentPlayer == PlayerName.BLACK.ordinal()) {
+            return timeBlackPlayer;
+        }
+
+        return null;
+    }
+
+    public Long getGameTime() {
+        return gameTime;
+    }
+
+    public void setGameTime() {
+        this.gameTime = System.currentTimeMillis();
+    }
+
+    public Long getTimeWhitePlayer() {
+        return timeWhitePlayer;
+    }
+
+    public void setTimeWhitePlayer(Long timeWhitePlayer) {
+        this.timeWhitePlayer = timeWhitePlayer;
+    }
+
+    public Long getTimeBlackPlayer() {
+        return timeBlackPlayer;
+    }
+
+    public void setTimeBlackPlayer(Long timeBlackPlayer) {
+        this.timeBlackPlayer = timeBlackPlayer;
+    }
+
+    public void setTimeCurrentPlayer(Long time) {
+        if (currentPlayer == PlayerName.WHITE.ordinal()) {
+            timeWhitePlayer = time;
+        } else if (currentPlayer == PlayerName.BLACK.ordinal()) {
+            timeBlackPlayer = time;
+        }
     }
 
     public Figure getFigureAt(int x, int y) {

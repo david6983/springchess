@@ -1,5 +1,19 @@
 console.log("started javascript loading");
 
+// time elapsed
+
+$(document).ready(function() {
+    let counterGame = parseInt($("#time")[0].innerText);
+    let counterMove = parseInt($("#time_move")[0].innerText);
+    let interval = setInterval(function() {
+        counterGame++;
+        counterMove++;
+
+        $('#time').text(counterGame);
+        $('#time_move').text(counterMove);
+    }, 1000);
+});
+
 // board component
 let board = $("#board");
 

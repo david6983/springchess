@@ -59,6 +59,9 @@ public class GameController {
         moves.deleteAll();
         // create a game
         Game g = new Game();
+        // initialize the times
+        g.setGameTime();
+        g.setTimeCurrentPlayer(System.currentTimeMillis());
 
         games.save(g);
 
@@ -83,6 +86,8 @@ public class GameController {
         if (game.isPresent()) {
             model.addAttribute("game", game.get());
             model.addAttribute("error_msg", "");
+            model.addAttribute("time", gameService.getTimeElapsed(game.get().getGameTime()));
+            model.addAttribute("time_move", gameService.getTimeElapsed(game.get().getTimeCurrentPlayer()));
 
             logger.info("Bool echec " + gameService.checkEchec(game.get()));
             if (gameService.checkEchec(game.get())) {
@@ -145,11 +150,15 @@ public class GameController {
         return "game-promote";
     }
 
-    @PostMapping("/resigning/{gameId}")
+    @GetMapping("/resigning/{gameId}")
     public String ResigningGame(@PathVariable final Long gameId) {
         Optional<Game> game = games.findById(gameId);
         if (game.isPresent()) {
             // TODO Player Loose the game
+            // TODO remove delete here
+            games.deleteAll();
+            figures.deleteAll();
+            moves.deleteAll();
         }
 
         return INDEX_REDIRECTION;
@@ -250,12 +259,14 @@ public class GameController {
                     // save the move
                     m.setPositionEnd(f.getMoveCode());
                     m.setPlayer(game.get().getCurrentPlayer());
+                    m.setTime(gameService.getTimeElapsed(game.get().getTimeCurrentPlayer()));
 
                     moves.save(m);
 
                     // change player
                     Game g = game.get();
                     g.changePlayer();
+                    g.setTimeCurrentPlayer(System.currentTimeMillis());
                     games.save(g);
 
                     // pawn promotion
@@ -286,29 +297,30 @@ public class GameController {
         Optional<Game> game = games.findById(gameId);
         if (game.isPresent()) {
             // change the coordinate of the moved pawn to the new position
-            Figure f1 = figures.getOne(pawnId1);
+            Figure f = figures.getOne(pawnId1);
             Figure f2 = figures.getOne(pawnId2);
 
             // the player is able to move is own pawns only
-            if (f1.getOwner() == game.get().getCurrentPlayer() && f1.getOwner() != f2.getOwner()) {
+            if (f.getOwner() == game.get().getCurrentPlayer() && f.getOwner() != f2.getOwner()) {
                 // check the movement
-                if (gameService.checkAny(game.get(), f1, f2.getX(), f2.getY())) {
+                if (gameService.checkAny(game.get(), f, f2.getX(), f2.getY())) {
                     Move m = new Move();
-                    m.setPositionStart(f1.getMoveCode());
+                    m.setPositionStart(f.getMoveCode());
                     
-                    f1.setX(f2.getX());
-                    f1.setY(f2.getY());
-                    f1.updateCountPlayed();
+                    f.setX(f2.getX());
+                    f.setY(f2.getY());
+                    f.updateCountPlayed();
 
-                    figures.save(f1);
+                    figures.save(f);
                     logger.info("figure moved");
 
                     figures.delete(f2);
                     logger.info("figure f2 deleted");
 
                     // save the move
-                    m.setPositionEnd(f1.getMoveCode());
+                    m.setPositionEnd(f.getMoveCode());
                     m.setPlayer(game.get().getCurrentPlayer());
+                    m.setTime(gameService.getTimeElapsed(game.get().getTimeCurrentPlayer()));
 
                     moves.save(m);
                     logger.info("Bool echec " + gameService.checkEchec(game.get()));
@@ -320,6 +332,7 @@ public class GameController {
                     // change player
                     Game g = game.get();
                     g.changePlayer();
+                    g.setTimeCurrentPlayer(System.currentTimeMillis());
 
                     // delete figure f2
                     g.getGrid().remove(f2);
@@ -327,8 +340,8 @@ public class GameController {
                     games.save(g);
 
                     // pawn promotion
-                    if (gameService.enablePromotePawn(f1)) {
-                        return "redirect:/game/promote/" + game.get().getId() + "/" + f1.getId();
+                    if (gameService.enablePromotePawn(f)) {
+                        return "redirect:/game/promote/" + game.get().getId() + "/" + f.getId();
                     }
                 }
             } else {
