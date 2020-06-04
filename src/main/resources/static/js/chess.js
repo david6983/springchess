@@ -24,6 +24,7 @@ let board = $("#board");
 $(function (e) {
     // replace text for the player's turn.
     const turnText = $('#player-turn').html();
+    console.log(turnText)
     $('.figure').draggable({
         containment: board,
         zIndex: 1,

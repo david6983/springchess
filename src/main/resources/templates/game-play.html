@@ -24,9 +24,10 @@
             <li>Move elapsed time : <span id="time_move" th:text="${time_move}">1</span> s</li>
         </ul>
         <h4 class="Timer"></h4>
-        <h4><span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? game.getBlackPlayer().getUsername() : game.getWhitePlayer().getUsername()}">Bilel</span> player
+        <h4><span th:text="${game.getCurrentPlayer() == 1 ? game.getBlackPlayer().getUsername() : game.getWhitePlayer().getUsername()}">Bilel</span> player
             <span th:text="${user_index == game.getCurrentPlayer()} ? 'your turn' : 'is playing'">is playing</span> !
         </h4>
+        <span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}" style="display: none;">Black</span>
         <h5 th:text="${error_msg}" class="alert-message">A message appear !</h5>
     </div>
     <h3 th:if="${game.getEchec() == 1 && !(mate)}" class="text-center">Échecs au Roi</h3>

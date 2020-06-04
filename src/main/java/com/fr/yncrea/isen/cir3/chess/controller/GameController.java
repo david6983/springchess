@@ -179,7 +179,8 @@ public class GameController {
 
     @GetMapping("/resigning/{gameId}")
     public String ResigningGame(
-            @PathVariable final Long gameId
+            @PathVariable final Long gameId,
+            @AuthenticationPrincipal User currentUser
     ) {
         Optional<Game> game = games.findById(gameId);
         if (game.isPresent()) {
@@ -215,13 +216,14 @@ public class GameController {
             @PathVariable final Long gameId,
             @PathVariable final Long pawnId,
             @PathVariable final Integer x,
-            @PathVariable final Integer y
+            @PathVariable final Integer y,
+            @AuthenticationPrincipal User currentUser
     ) {
         Optional<Game> game = games.findById(gameId);
         if (game.isPresent()) {
             // change the coordinate of the moved pawn to the new position
             Figure f = figures.getOne(pawnId);
-            if (f.getOwner() == game.get().getCurrentPlayer()) {
+            if (f.getOwner() == game.get().getCurrentPlayer() && game.get().getCurrentUser().getUsername().equals(currentUser.getUsername())) {
 
                 int dy = Arrays.asList(-1, 1).get(f.getOwner());
                 // y offset
@@ -265,14 +267,15 @@ public class GameController {
                                  @PathVariable final Long gameId,
                                  @PathVariable final Long pawnId,
                                  @PathVariable final Integer x,
-                                 @PathVariable final Integer y
+                                 @PathVariable final Integer y,
+                                 @AuthenticationPrincipal User currentUser
     ) {
         Optional<Game> game = games.findById(gameId);
         if (game.isPresent()) {
             // change the coordinate of the moved pawn to the new position
             Figure f = figures.getOne(pawnId);
             // the player is able to move is own pawns only
-            if (f.getOwner() == game.get().getCurrentPlayer()) {
+            if (f.getOwner() == game.get().getCurrentPlayer() && game.get().getCurrentUser().getUsername().equals(currentUser.getUsername())) {
                 // check the movement
                 if (gameService.checkAny(game.get(), f, x, y)) {
                     Move m = new Move();
@@ -333,7 +336,7 @@ public class GameController {
             Figure f2 = figures.getOne(pawnId2);
 
             // the player is able to move is own pawns only
-            if (f.getOwner() == game.get().getCurrentPlayer() && f.getOwner() != f2.getOwner()) {
+            if (f.getOwner() == game.get().getCurrentPlayer() && f.getOwner() != f2.getOwner() && game.get().getCurrentUser().getUsername().equals(currentUser.getUsername())) {
                 // check the movement
                 if (gameService.checkAny(game.get(), f, f2.getX(), f2.getY())) {
                     Move m = new Move();

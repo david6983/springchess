@@ -20,6 +20,7 @@ public class LoginListener implements ApplicationListener<InteractiveAuthenticat
         if (u != null) {
             u.setLogIn(true);
             users.save(u);
+            System.out.println("new log in true");
         }
     }
 }

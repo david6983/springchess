@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class IndexController {
@@ -38,8 +39,10 @@ public class IndexController {
         List<User> friends = friendService.getFriendUserList(user);
         List<Game> gameList = games.findByWhitePlayerOrBlackPlayer(user, user);
 
-        user.setPlaying(false);
-        users.save(user);
+        User u = users.findByUsername(user.getUsername());
+        u.setPlaying(false);
+        u.setLogIn(true);
+        users.save(u);
 
         model.addAttribute("user", user);
         model.addAttribute("friend_requests", friendRequests.findAllByReceiverAndIsAccepted(user, false));
