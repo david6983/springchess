@@ -11,10 +11,27 @@ public class Move {
     private Long id;
 
     @Column
-    private String code;
+    private String positionEnd;
+
+    @Column
+    private String positionStart;
 
     @Column
     private Integer player;
+
+    @Column
+    private Long time;
+
+    @ManyToOne
+    private Game game;
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
 
     public Long getId() {
         return id;
@@ -24,12 +41,20 @@ public class Move {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getPositionEnd() {
+        return positionEnd;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setPositionEnd(String positionEnd) {
+        this.positionEnd = positionEnd;
+    }
+
+    public String getPositionStart() {
+        return positionStart;
+    }
+
+    public void setPositionStart(String positionStart) {
+        this.positionStart = positionStart;
     }
 
     public Integer getPlayer() {
@@ -38,5 +63,13 @@ public class Move {
 
     public void setPlayer(Integer player) {
         this.player = player;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }
