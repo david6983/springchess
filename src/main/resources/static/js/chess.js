@@ -23,8 +23,10 @@ let board = $("#board");
  */
 $(function (e) {
     // replace text for the player's turn.
-    const turnText = $('#player-turn').html();
-    console.log(turnText)
+    let turnText = "Unknow";
+    if ($('#mate').html() == null && $('#winner').html() == null)
+        turnText = $('#player-turn').html();
+
     $('.figure').draggable({
         containment: board,
         zIndex: 1,
@@ -100,7 +102,16 @@ $(function () {
 
 function leaveGame() {
     let gameId = $(location).attr('href').split('/')[5]; // http://localhost:8080/game/play/{id}
-    window.location.href = '/game/resigning/' + gameId;
+    let looser = $('#leave').attr('data-id');
+    let winner;
+
+    if($('#Player1').text() === looser) {
+        winner = $('#Player2').text();
+    }
+    else {
+        winner = $('#Player1').text();
+    }
+    window.location.href = '/game/endgame/' + gameId + '/' + winner + '/' + looser;
 }
 
 console.log("js fully loaded");

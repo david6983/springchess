@@ -121,7 +121,7 @@ public class GameController {
             logger.info("Bool mate " + gameService.checkMate(game.get()));
             model.addAttribute("mate", gameService.checkMate(game.get()));
 
-            if(gamesList.findByGameId(id) != null)
+            if (gamesList.findByGameId(id) != null)
                 model.addAttribute("gameList", gamesList.findByGameId(id));
 
             currentUser.setPlaying(true);
@@ -177,29 +177,13 @@ public class GameController {
         return "game-promote";
     }
 
-    @GetMapping("/resigning/{gameId}")
-    public String ResigningGame(
-            @PathVariable final Long gameId,
-            @AuthenticationPrincipal User currentUser
-    ) {
-        Optional<Game> game = games.findById(gameId);
-        if (game.isPresent()) {
-            // TODO Player Loose the game
-            // TODO remove delete here
-            games.deleteAll();
-            figures.deleteAll();
-            moves.deleteAll();
-        }
-
-        return INDEX_REDIRECTION;
-    }
 
     @GetMapping("/endgame/{gameId}/{winner}/{looser}")
     public String EndGame(@PathVariable final Long gameId,
                           @PathVariable final String winner,
                           @PathVariable final String looser
     ) {
-        if(gamesList.findByGameId(gameId) == null) {
+        if (gamesList.findByGameId(gameId) == null) {
             GameList gameList = new GameList();
             gameList.setWinner(winner);
             gameList.setLooser(looser);
@@ -341,7 +325,7 @@ public class GameController {
                 if (gameService.checkAny(game.get(), f, f2.getX(), f2.getY())) {
                     Move m = new Move();
                     m.setPositionStart(f.getMoveCode());
-                    
+
                     f.setX(f2.getX());
                     f.setY(f2.getY());
                     f.updateCountPlayed();
