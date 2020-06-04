@@ -2,10 +2,7 @@ package com.fr.yncrea.isen.cir3.chess.controller;
 
 import com.fr.yncrea.isen.cir3.chess.domain.*;
 import com.fr.yncrea.isen.cir3.chess.form.PromoteForm;
-import com.fr.yncrea.isen.cir3.chess.repository.FigureRepository;
-import com.fr.yncrea.isen.cir3.chess.repository.GameListRepository;
-import com.fr.yncrea.isen.cir3.chess.repository.GameRepository;
-import com.fr.yncrea.isen.cir3.chess.repository.MoveRepository;
+import com.fr.yncrea.isen.cir3.chess.repository.*;
 import com.fr.yncrea.isen.cir3.chess.services.ChessGameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -48,10 +42,28 @@ public class GameController {
     @Autowired
     private FigureRepository figures;
 
+    @Autowired
+    private UserRepository users;
+
     private Logger logger = LoggerFactory.getLogger(GameController.class);
 
-    @GetMapping("/start")
-    public String start() {
+    @GetMapping("/start/{whiteUserId}/{blackUserId}")
+    public String start(
+            @PathVariable Long whiteUserId,
+            @PathVariable Long blackUserId
+    ) {
+        Optional<User> white = users.findById(whiteUserId);
+        Optional<User> black = users.findById(blackUserId);
+
+        if (white.isPresent() && black.isPresent()) {
+            System.out.println(white.get().getUsername());
+            System.out.println(black.get().getUsername());
+
+            if (white.get().getLogIn() && black.get().getLogIn()) {
+                System.out.println("the game can start");
+            }
+        }
+
         // clean up
         //TODO clean according to one game not delete all the table
         games.deleteAll();

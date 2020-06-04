@@ -1,20 +1,31 @@
 package com.fr.yncrea.isen.cir3.chess.services;
 
 import com.fr.yncrea.isen.cir3.chess.domain.FriendRequest;
-import com.fr.yncrea.isen.cir3.chess.form.FriendRequestForm;
+import com.fr.yncrea.isen.cir3.chess.domain.User;
+import com.fr.yncrea.isen.cir3.chess.repository.FriendRequestRepository;
+import com.fr.yncrea.isen.cir3.chess.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class FriendRequestService {
-    public FriendRequestForm createForm(FriendRequest req) {
-        FriendRequestForm form = new FriendRequestForm();
-        if (req == null) {
-            return form;
+    @Autowired
+    private UserRepository users;
+
+    @Autowired
+    private FriendRequestRepository friendRequests;
+
+    public List<User> getFriendUserList(User receiver) {
+        List<FriendRequest> friends = friendRequests.findAllByReceiverAndIsAccepted(receiver, true);
+        List<User> userFriends = new ArrayList<>();
+
+        for (FriendRequest friend: friends) {
+            userFriends.add(users.findByUsername(friend.getSender()));
         }
 
-        form.setId(req.getId());
-        form.setUsername(req.getReceiver().getUsername());
-        form.setSender(req.getSender());
-        return form;
+        return userFriends;
     }
 }

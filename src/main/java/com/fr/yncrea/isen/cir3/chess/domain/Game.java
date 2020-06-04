@@ -66,6 +66,12 @@ public class Game {
     @Column
     private Long gameTime;
 
+    @OneToOne
+    private User whitePlayer = null;
+
+    @OneToOne
+    private User blackPlayer = null;
+
     public Long getId() {
         return id;
     }
@@ -204,5 +210,21 @@ public class Game {
         }
 
         return count;
+    }
+
+    public User getWhitePlayer() {
+        return whitePlayer;
+    }
+
+    public void setWhitePlayer(User whitePlayer) {
+        this.whitePlayer = whitePlayer;
+    }
+
+    public User getBlackPlayer() {
+        return blackPlayer;
+    }
+
+    public void setBlackPlayer(User blackPlayer) {
+        this.blackPlayer = blackPlayer;
     }
 }
