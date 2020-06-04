@@ -227,4 +227,14 @@ public class Game {
     public void setBlackPlayer(User blackPlayer) {
         this.blackPlayer = blackPlayer;
     }
+
+    public User getCurrentUser() {
+        if (currentPlayer == PlayerName.BLACK.ordinal()) {
+            return getBlackPlayer();
+        } else if (currentPlayer == PlayerName.WHITE.ordinal()) {
+            return getWhitePlayer();
+        }
+
+        return null;
+    }
 }

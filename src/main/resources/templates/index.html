@@ -18,6 +18,30 @@
                 <a href="#" class="card-link text-danger">Delete my account</a>
             </div>
         </div>
+        <h2 class="mt-4 mb-4">Current games</h2>
+        <table class="table" th:if="${!games.isEmpty()}">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">White player</th>
+                <th scope="col">Black player</th>
+                <th class="col">Join</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="game: ${games}">
+                    <td th:text="${game.getId()}" scope="row">1</td>
+                    <td th:text="${game.getWhitePlayer().getUsername()}">Mark</td>
+                    <td th:text="${game.getBlackPlayer().getUsername()}">Otto</td>
+                    <td>
+                        <a class="btn btn-success" href="#" th:href="|@{/game/play/}${game.getId()}|">
+                            <span class="oi oi-media-play" title="accept" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:if="${games.isEmpty()}">No game started !</div>
         <h2 class="mt-4 mb-4">Sent game requests</h2>
         <div th:if="${!pending_game_requests.isEmpty()}" class="col-sm">
             <ul class="list-group">

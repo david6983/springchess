@@ -5,17 +5,18 @@
 <body>
 <!--/* Game page to play chess */-->
 <div th:fragment="content" th:id="'game'+${game.getId()}">
-    <h1 class="text-center">Welcome to Chess</h1>
+    <h1 class="text-center">You are <span th:text="${user.getUsername()}"></span></h1>
+    <h6 class="text-danger text-center">Refresh the page to update the other player moves</h6>
     <div class="container-fluid">
         <button type="button" class="btn btn-dark" id="leave" data-toggle="modal" data-target="#LeaveGame">Leave
         </button>
         <h2>Game <span th:text="${game.getId()}"></span></h2>
         <ul>
-            <li><span id="Player1">Player 1</span> is
+            <li><span th:text="${game.getBlackPlayer().getUsername()}" id="Player1" th:classappend="${game.getBlackPlayer().getPlaying() == true ? 'text-success' : 'text-danger'}">Player 1</span> is
                 <span class="bold">Black</span>
                 (<span th:text="${game.getNumberOfPlay(1)}">0</span> moves)
             </li>
-            <li><span id="Player2">Player 2</span> is
+            <li><span th:text="${game.getWhitePlayer().getUsername()}" id="Player2" th:classappend="${game.getWhitePlayer().getPlaying() == true ? 'text-success' : 'text-danger'}">Player 2</span> is
                 <span class="bold">White</span>
                 (<span th:text="${game.getNumberOfPlay(0)}">0</span> moves)
             </li>
@@ -23,7 +24,9 @@
             <li>Move elapsed time : <span id="time_move" th:text="${time_move}">1</span> s</li>
         </ul>
         <h4 class="Timer"></h4>
-        <h4><span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}">Black</span> player your turn !</h4>
+        <h4><span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? game.getBlackPlayer().getUsername() : game.getWhitePlayer().getUsername()}">Bilel</span> player
+            <span th:text="${user_index == game.getCurrentPlayer()} ? 'your turn' : 'is playing'">is playing</span> !
+        </h4>
         <h5 th:text="${error_msg}" class="alert-message">A message appear !</h5>
     </div>
     <h3 th:if="${game.getEchec() == 1 && !(mate)}" class="text-center">Échecs au Roi</h3>
@@ -31,7 +34,7 @@
     <h2 th:if="${gameList}" class="text-center" id="winner">Winner is <span th:text="${gameList.getWinner()}" >Player 1</span></h2>
     <div class="flex-container">
         <table id="board">
-            <tr th:if="${game.getCurrentPlayer() == 0}" th:each="y: ${#numbers.sequence(0, game.WIDTH - 1)}" class="line">
+            <tr th:if="${game.getWhitePlayer().getUsername() == user.getUsername()}" th:each="y: ${#numbers.sequence(0, game.WIDTH - 1)}" class="line">
                 <td th:each="x: ${#numbers.sequence(0, game.WIDTH - 1)}" class="cell ui-droppable"
                     th:classappend="|${(x % 2 == y % 2) ? 'odd' : 'even' } ${(game.getFigureAt(x, y) != null) ? 'disabled' : ''} |"
                     th:attr="data-x=${x}, data-y=${y}">
@@ -42,7 +45,7 @@
                     </div>
                 </td>
             </tr>
-            <tr th:if="${game.getCurrentPlayer() == 1}" th:each="y: ${#numbers.sequence(game.WIDTH - 1, 0, -1)}" class="line">
+            <tr th:if="${game.getBlackPlayer().getUsername() == user.getUsername()}" th:each="y: ${#numbers.sequence(game.WIDTH - 1, 0, -1)}" class="line">
                 <td th:each="x: ${#numbers.sequence(0, game.WIDTH - 1)}" class="cell ui-droppable"
                     th:classappend="|${(x % 2 == y % 2) ? 'even' : 'odd' } ${(game.getFigureAt(x, y) != null) ? 'disabled' : ''} |"
                     th:attr="data-x=${x}, data-y=${y}">

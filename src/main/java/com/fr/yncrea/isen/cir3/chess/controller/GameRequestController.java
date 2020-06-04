@@ -57,7 +57,7 @@ public class GameRequestController {
             }
         }
 
-        return "redirect:/game/start/" + friendId + "/" + currentUser.getId();
+        return "redirect:/game/init/" + friendId + "/" + currentUser.getId();
     }
 
     @GetMapping("/decline")

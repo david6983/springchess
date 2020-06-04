@@ -7,6 +7,7 @@ import com.fr.yncrea.isen.cir3.chess.services.ChessGameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,8 +48,8 @@ public class GameController {
 
     private Logger logger = LoggerFactory.getLogger(GameController.class);
 
-    @GetMapping("/start/{whiteUserId}/{blackUserId}")
-    public String start(
+    @GetMapping("/init/{whiteUserId}/{blackUserId}")
+    public String init(
             @PathVariable Long whiteUserId,
             @PathVariable Long blackUserId
     ) {
@@ -60,43 +61,53 @@ public class GameController {
             System.out.println(black.get().getUsername());
 
             if (white.get().getLogIn() && black.get().getLogIn()) {
-                System.out.println("the game can start");
+                black.get().setPlaying(true);
+                users.save(black.get());
+
+                // clean up
+                //TODO clean according to one game not delete all the table
+                games.deleteAll();
+                figures.deleteAll();
+                moves.deleteAll();
+                // create a game
+                Game g = new Game();
+                g.setBlackPlayer(black.get());
+                g.setWhitePlayer(white.get());
+
+                // initialize the times
+                // g.setGameTime();
+                //g.setTimeCurrentPlayer(System.currentTimeMillis());
+
+                games.save(g);
+
+                // generate the grid
+                gameService.generateGrid(g);
+
+                // save generated figures
+                figures.saveAll(g.getGrid());
+                gameService.findKing(g);
+
+                games.save(g);
+                logger.info("figures saved from game/");
+
+                return GAME_REDIRECTION + g.getId();
             }
         }
 
-        // clean up
-        //TODO clean according to one game not delete all the table
-        games.deleteAll();
-        figures.deleteAll();
-        moves.deleteAll();
-        // create a game
-        Game g = new Game();
-        // initialize the times
-        g.setGameTime();
-        g.setTimeCurrentPlayer(System.currentTimeMillis());
-
-        games.save(g);
-
-        // generate the grid
-        gameService.generateGrid(g);
-
-        // save generated figures
-        figures.saveAll(g.getGrid());
-        gameService.findKing(g);
-
-        games.save(g);
-        logger.info("figures saved from game/");
-
-        return GAME_REDIRECTION + g.getId();
+        return INDEX_REDIRECTION;
     }
 
     @GetMapping("/play/{id}")
-    public String play(final Model model,
-                       @PathVariable final Long id
+    public String play(
+            final Model model,
+            @PathVariable final Long id,
+            @AuthenticationPrincipal User currentUser
     ) {
         Optional<Game> game = games.findById(id);
         if (game.isPresent()) {
             model.addAttribute("game", game.get());
+            model.addAttribute("user_index", (game.get().getBlackPlayer().getUsername().equals(currentUser.getUsername())) ? 1 : 0);
+            model.addAttribute("user", currentUser);
             model.addAttribute("error_msg", "");
             model.addAttribute("time", gameService.getTimeElapsed(game.get().getGameTime()));
             model.addAttribute("time_move", gameService.getTimeElapsed(game.get().getTimeCurrentPlayer()));
@@ -113,6 +124,8 @@ public class GameController {
             if(gamesList.findByGameId(id) != null)
                 model.addAttribute("gameList", gamesList.findByGameId(id));
 
+            currentUser.setPlaying(true);
+            users.save(currentUser);
 
             return "game-play";
         }
@@ -165,7 +178,9 @@ public class GameController {
     }
 
     @GetMapping("/resigning/{gameId}")
-    public String ResigningGame(@PathVariable final Long gameId) {
+    public String ResigningGame(
+            @PathVariable final Long gameId
+    ) {
         Optional<Game> game = games.findById(gameId);
         if (game.isPresent()) {
             // TODO Player Loose the game
@@ -181,7 +196,8 @@ public class GameController {
     @GetMapping("/endgame/{gameId}/{winner}/{looser}")
     public String EndGame(@PathVariable final Long gameId,
                           @PathVariable final String winner,
-                          @PathVariable final String looser) {
+                          @PathVariable final String looser
+    ) {
         if(gamesList.findByGameId(gameId) == null) {
             GameList gameList = new GameList();
             gameList.setWinner(winner);
@@ -195,7 +211,7 @@ public class GameController {
 
 
     @GetMapping("/passant/{gameId}/{pawnId}/{x}/{y}")
-    public String PriseEnPassant(
+    public String priseEnPassant(
             @PathVariable final Long gameId,
             @PathVariable final Long pawnId,
             @PathVariable final Integer x,
@@ -255,7 +271,6 @@ public class GameController {
         if (game.isPresent()) {
             // change the coordinate of the moved pawn to the new position
             Figure f = figures.getOne(pawnId);
-
             // the player is able to move is own pawns only
             if (f.getOwner() == game.get().getCurrentPlayer()) {
                 // check the movement
@@ -308,7 +323,8 @@ public class GameController {
     public String moveOnAnyPawn(final Model model,
                                 @PathVariable final Long gameId,
                                 @PathVariable final Long pawnId1,
-                                @PathVariable final Long pawnId2
+                                @PathVariable final Long pawnId2,
+                                @AuthenticationPrincipal User currentUser
     ) {
         Optional<Game> game = games.findById(gameId);
         if (game.isPresent()) {

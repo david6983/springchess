@@ -344,6 +344,10 @@ public class ChessGameService {
      * @return time elapsed in seconds
      */
     public Long getTimeElapsed(final Long time) {
+        if (time == null) {
+            return 0L;
+        }
+
         return (System.currentTimeMillis() - time) / S_CONVERT;
     }
 }
