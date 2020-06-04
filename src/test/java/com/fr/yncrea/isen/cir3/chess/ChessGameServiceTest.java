@@ -1,12 +1,16 @@
 package com.fr.yncrea.isen.cir3.chess;
 
 import com.fr.yncrea.isen.cir3.chess.domain.Figure;
+import com.fr.yncrea.isen.cir3.chess.domain.FigureName;
 import com.fr.yncrea.isen.cir3.chess.domain.Game;
 import com.fr.yncrea.isen.cir3.chess.services.ChessGameService;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChessGameServiceTest {
     private ChessGameService service;
@@ -83,29 +87,237 @@ public class ChessGameServiceTest {
 
     @Test
     public void checkQueenTest() {
-        // forward
 
-        // backward
+        // move the pawn in front of the left rook for testing
+        game.getFigureAt(0, 6).setY(4);
 
-        // left
+        // can go forward
+        assertThat(service.checkQueen(game, 0, 7, 0, 5)).isTrue();
 
-        // right
+        // can go back
+        assertThat(service.checkQueen(game, 3, 4, 3, 5)).isTrue();
 
-        //
+        // can go left
+        assertThat(service.checkQueen(game, 3, 4, 2, 4)).isTrue();
+
+        // can go right
+        assertThat(service.checkQueen(game, 3, 4, 4, 4)).isTrue();
+
+        // first diagonal
+        assertThat(service.checkQueen(game, 2, 7, 0, 5)).isFalse();
+
+        // move the pawn that is on the path of the bishop
+        game.getFigureAt(1, 6).setY(5);
+        assertThat(service.checkQueen(game, 2, 7, 0, 5)).isTrue();
+
+        // second diagonal
+        assertThat(service.checkQueen(game, 2, 7, 4, 5)).isFalse();
+        // move the pawn that is on the path of the bishop
+        game.getFigureAt(3, 6).setY(5);
+        assertThat(service.checkQueen(game, 2, 7, 4, 5)).isTrue();
+
+
+        // can't go outside the map
+        assertThat(service.checkQueen(game, 4, 4, -1, -1)).isFalse();
+
     }
 
     @Test
     public void checkKingTest() {
+        Figure f = game.getFigureAt(4, 7);
+        f.setY(4);
 
+        // can go forward
+        assertThat(service.checkKing(game, f, 4, 3)).isTrue();
+
+        // can go back
+        assertThat(service.checkKing(game, f, 4, 5)).isTrue();
+
+        // can go left
+        assertThat(service.checkKing(game, f, 3, 4)).isTrue();
+
+        // can go right
+        assertThat(service.checkKing(game, f, 5, 4)).isTrue();
+
+        // can go in diagonal top-right
+        assertThat(service.checkKing(game, f, 5, 5)).isTrue();
+
+        // can go in diagonal top-left
+        assertThat(service.checkKing(game, f, 3, 5)).isTrue();
+
+        // can go in diagonal bottom-right
+        assertThat(service.checkKing(game, f, 5, 3)).isTrue();
+
+        // can go in diagonal bottom-left
+        assertThat(service.checkKing(game, f, 3, 3)).isTrue();
+
+        // can't go outside the map
+        assertThat(service.checkKing(game, f, -1, -1)).isFalse();
+
+    }
+
+    @Test
+    public void smallCastlingTest() {
+        Figure f = game.getFigureAt(4, 7);
+
+        // Small castling
+        // Move knight and bishop
+        game.getFigureAt(5, 7).setY(5);
+        game.getFigureAt(6, 7).setY(5);
+
+        assertThat(service.checkKing(game, f, 6, 7)).isTrue();
+    }
+
+  @Test
+    public void bigCastlingTest() {
+      Figure f = game.getFigureAt(4, 7);
+
+      // Big castling
+      // Move knight and bishop
+      game.getFigureAt(1, 7).setY(5);
+      game.getFigureAt(2, 7).setY(5);
+      game.getFigureAt(3, 7).setY(5);
+
+
+      assertThat(service.checkKing(game, f, 2, 7)).isTrue();
     }
 
     @Test
     public void checkKnightTest() {
 
+        // can go forward-right
+        assertThat(service.checkKnight(1,7, 2, 5)).isTrue();
+
+        // can go forward-left
+        assertThat(service.checkKnight(1,7, 0, 5)).isTrue();
+
+        // can go right-top
+        assertThat(service.checkKnight(1,4,3,3)).isTrue();
+
+        // can go right-bottom
+        assertThat(service.checkKnight(1,4, 3, 5)).isTrue();
+
+        // can go left-top
+        assertThat(service.checkKnight(3,4, 1, 3)).isTrue();
+
+        // can go left-
+        assertThat(service.checkKnight(3,4, 1, 5)).isTrue();
+
+        // can't go in left
+        assertThat(service.checkKnight(4, 4, 2, 4)).isFalse();
+
+        // can't go in right
+        assertThat(service.checkKnight(4, 4, 6, 4)).isFalse();
+
+        // can't go in top
+        assertThat(service.checkKnight(4, 4, 4, 2)).isFalse();
+
+        // can't go in bottom
+        assertThat(service.checkKnight(4, 4, 4, 6)).isFalse();
+
     }
+
+    @Test
+    public void checkPawnTest() {
+        Figure f = game.getFigureAt(0, 6);
+
+        // starts by advancing 2 squares
+        assertThat(service.checkPawn(game, f, 0, 4)).isTrue();
+
+        // starts by advancing 1 squares
+        assertThat(service.checkPawn(game, f, 0, 5)).isTrue();
+
+        // cannot start by advancing 1 diagonal squares
+        assertThat(service.checkPawn(game, f, 1, 5)).isFalse();
+
+        f.setY(2);
+        // kill opponent in diagonal right
+        assertThat(service.checkPawn(game, f, 1, 1)).isTrue();
+
+        f.setX(1);
+        // kill opponent in diagonal left
+        assertThat(service.checkPawn(game, f, 0, 1)).isTrue();
+
+        f.setX(1);
+        // cannot go back
+        assertThat(service.checkPawn(game, f, 1, 3)).isFalse();
+
+
+    }
+
+//    @Test
+//    public void checkEnPassantTest() {
+//        // put pawn for "en passant"
+//        Figure f = game.getFigureAt(1, 3);
+//
+//        // En passant left
+//        game.getFigureAt(0,1).setY(3);
+//        // en passant right
+//        game.getFigureAt(2,1).setY(3);
+//        assertThat(service.checkEnPassant(game, f, 0, 2)).isTrue();
+//
+//        f.setX(1);
+//        f.setY(3);
+//        assertThat(service.checkEnPassant(game, f, 2, 2)).isTrue();
+//
+//    }
+
 
     @Test
     public void checkAnyTest() {
 
+        //Pawn
+        Figure f = game.getFigureAt(0,6);
+        assertThat(service.checkAny(game, f, 0, 4)).isTrue();
+        assertThat(service.checkAny(game, f, 1, 5)).isFalse();
+
+        //Rook
+        f = game.getFigureAt(0,7);
+        f.setY(5);
+        assertThat(service.checkAny(game, f, 0, 3)).isTrue();
+        assertThat(service.checkAny(game, f, 4, 3)).isFalse();
+
+        //Knight
+        f = game.getFigureAt(1,7);
+        assertThat(service.checkAny(game, f, 2, 5)).isTrue();
+        assertThat(service.checkAny(game, f, 1, 4)).isFalse();
+
+        //bishop
+        f = game.getFigureAt(2,7);
+        f.setY(5);
+        assertThat(service.checkAny(game, f, 4, 3)).isTrue();
+        assertThat(service.checkAny(game, f, 2, 3)).isFalse();
+
+        //renne
+        f = game.getFigureAt(3,7);
+        f.setY(5);
+        assertThat(service.checkAny(game, f, 7, 5)).isTrue();
+        assertThat(service.checkAny(game, f, 1, 5)).isFalse();
+
+        //roi
+        f = game.getFigureAt(4,7);
+        f.setY(5);
+        assertThat(service.checkAny(game, f, 3, 4)).isTrue();
+        assertThat(service.checkAny(game, f, 4, 3)).isFalse();
+    }
+
+    @Test
+    public void enablePromotePawnTest() {
+        // PAWN
+        Figure f = game.getFigureAt(0,6);
+        assertThat(FigureName.stringToFigureName(f.getName())).isEqualTo(FigureName.PAWN);
+
+        assertThat(service.enablePromotePawn(f)).isFalse();
+
+        f.setY(0);
+        assertThat(service.enablePromotePawn(f)).isTrue();
+    }
+
+
+    @Test
+    public void findKingTest() {
+        service.findKing(game);
+        assertThat(game.getWhiteKingId()).isNotEqualTo("null");
+        assertThat(game.getBlackKingId()).isNotEqualTo("null");
     }
 }

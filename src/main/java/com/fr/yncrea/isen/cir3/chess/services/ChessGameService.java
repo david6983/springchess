@@ -298,11 +298,10 @@ public class ChessGameService {
         return false;
     }
 
-    public Boolean checkLifeSaver(Game game, Long id, int dx, int dy) {
-        int x = game.getFigureById(id).getX();
-        int y = game.getFigureById(id).getY();
-        return dx == x && dy == y;
-    }
+    //TODO checkLifeSaver()
+//    public Boolean checkLifeSaver(Game game, Long id, int dx, int dy) {
+//
+//    }
 
     public Boolean checkMate(Game game) {
         if (game.getFigureById(game.getWhiteKingId()) != null && game.getFigureById(game.getBlackKingId()) != null) {
