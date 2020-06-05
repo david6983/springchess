@@ -4,13 +4,10 @@ import com.fr.yncrea.isen.cir3.chess.domain.Figure;
 import com.fr.yncrea.isen.cir3.chess.domain.FigureName;
 import com.fr.yncrea.isen.cir3.chess.domain.Game;
 import com.fr.yncrea.isen.cir3.chess.services.ChessGameService;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChessGameServiceTest {
     private ChessGameService service;
@@ -245,22 +242,34 @@ public class ChessGameServiceTest {
 
     }
 
-//    @Test
-//    public void checkEnPassantTest() {
-//        // put pawn for "en passant"
-//        Figure f = game.getFigureAt(1, 3);
-//
-//        // En passant left
-//        game.getFigureAt(0,1).setY(3);
-//        // en passant right
-//        game.getFigureAt(2,1).setY(3);
-//        assertThat(service.checkEnPassant(game, f, 0, 2)).isTrue();
-//
-//        f.setX(1);
-//        f.setY(3);
-//        assertThat(service.checkEnPassant(game, f, 2, 2)).isTrue();
-//
-//    }
+    @Test
+    public void checkEnPassantTest() {
+        // en passant test left position
+        Figure f = game.getFigureAt(1, 6);
+        assertThat(f).isNotNull();
+        f.setY(3);
+
+        game.getFigureAt(2, 1).setY(3);
+        game.getFigureAt(2, 3).updateCountPlayed();
+
+        assertThat(service.checkEnPassant(game, f, 2, 2)).isTrue();
+
+        // en passant test right position
+        Figure f2 = game.getFigureAt(6, 6);
+        assertThat(f2).isNotNull();
+        f2.setY(3);
+
+        game.getFigureAt(5, 1).setY(3);
+        game.getFigureAt(5, 3).updateCountPlayed();
+
+        assertThat(service.checkEnPassant(game, f2, 5, 2)).isTrue();
+
+        game.getFigureAt(5, 3).setY(4);
+        assertThat(service.checkEnPassant(game, f2, 5, 2)).isFalse();
+
+        f2.setY(f2.getY() + 1);
+        assertThat(service.checkEnPassant(game, f2, 5, 2)).isFalse();
+    }
 
 
     @Test
