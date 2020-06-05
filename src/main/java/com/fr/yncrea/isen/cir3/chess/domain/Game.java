@@ -72,6 +72,15 @@ public class Game {
     @OneToOne
     private User blackPlayer = null;
 
+    @Column
+    private Boolean isFinish = false;
+
+    @Column
+    private Boolean isPause = false;
+
+    @Enumerated
+    private PlayerName winner;
+
     public Long getId() {
         return id;
     }
@@ -236,5 +245,45 @@ public class Game {
         }
 
         return null;
+    }
+
+    public Boolean getFinish() {
+        return isFinish;
+    }
+
+    public void setFinish(Boolean finish) {
+        isFinish = finish;
+    }
+
+    public Boolean getPause() {
+        return isPause;
+    }
+
+    public void setPause(Boolean pause) {
+        isPause = pause;
+    }
+
+    public PlayerName getWinner() {
+        return winner;
+    }
+
+    public void setWinner(PlayerName winner) {
+        this.winner = winner;
+    }
+
+    public User getUserWinner() {
+        if (winner == PlayerName.BLACK) {
+            return blackPlayer;
+        } else {
+            return whitePlayer;
+        }
+    }
+
+    public User getUserLooser() {
+        if (winner == PlayerName.BLACK) {
+            return whitePlayer;
+        } else {
+            return blackPlayer;
+        }
     }
 }

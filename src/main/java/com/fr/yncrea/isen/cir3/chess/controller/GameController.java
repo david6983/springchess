@@ -79,7 +79,7 @@ public class GameController {
                 // add the players
                 g.setBlackPlayer(black.get());
                 g.setWhitePlayer(white.get());
-
+                g.setEchec(0);
                 // initialize the times
                 // g.setGameTime();
                 //g.setTimeCurrentPlayer(System.currentTimeMillis());
@@ -189,6 +189,18 @@ public class GameController {
                           @PathVariable final String winner,
                           @PathVariable final String looser
     ) {
+        Optional<Game> game = games.findById(gameId);
+        if (game.isPresent()) {
+            game.get().setFinish(true);
+            game.get().setPause(true);
+            if (game.get().getBlackPlayer().getUsername().equals(winner)) {
+                game.get().setWinner(PlayerName.BLACK);
+            } else if (game.get().getWhitePlayer().getUsername().equals(winner)) {
+                game.get().setWinner(PlayerName.WHITE);
+            }
+            games.save(game.get());
+        }
+
         if (gamesList.findByGameId(gameId) == null) {
             GameList gameList = new GameList();
             gameList.setWinner(winner);

@@ -8,8 +8,9 @@
     <h1 class="text-center">You are <span th:text="${user.getUsername()}"></span></h1>
     <h6 class="text-danger text-center">Refresh the page to update the other player moves</h6>
     <div class="container-fluid">
-        <button type="button" class="btn btn-dark" id="leave" th:attr="data-id=${user.getUsername()}" data-toggle="modal" data-target="#LeaveGame">Leave
+        <button th:if="${!mate}" type="button" class="btn btn-dark" id="leave" th:attr="data-id=${user.getUsername()}" data-toggle="modal" data-target="#LeaveGame">Give up
         </button>
+        <a th:if="${mate}" href="#" class="btn btn-success mt-3 mb-3" th:href="@{/}">Go back to my profile</a>
         <h2>Game <span th:text="${game.getId()}"></span></h2>
         <ul>
             <li><span th:text="${game.getBlackPlayer().getUsername()}" id="Player1" th:classappend="${game.getBlackPlayer().getPlaying() == true ? 'text-success' : 'text-danger'}">Player 1</span> is
@@ -24,7 +25,8 @@
             <li>Move elapsed time : <span id="time_move" th:text="${time_move}">1</span> s</li>
         </ul>
         <h4 class="Timer"></h4>
-        <h4><span th:text="${game.getCurrentPlayer() == 1 ? game.getBlackPlayer().getUsername() : game.getWhitePlayer().getUsername()}">Bilel</span> player
+        <h4 th:if="${!mate}">
+            <span th:text="${game.getCurrentPlayer() == 1 ? game.getBlackPlayer().getUsername() : game.getWhitePlayer().getUsername()}">Bilel</span> player
             <span th:text="${user_index == game.getCurrentPlayer()} ? 'your turn' : 'is playing'">is playing</span> !
         </h4>
         <span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}" style="display: none;">Black</span>

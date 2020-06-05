@@ -39,9 +39,10 @@ public class IndexController {
     @GetMapping("/")
     public String welcome(@AuthenticationPrincipal User user, final Model model) {
         List<User> friends = friendService.getFriendUserList(user);
-        List<Game> currentGameList = games.findByWhitePlayerOrBlackPlayer(user, user);
-        List<GameList> lastGamesList = lastGames.findByWinnerOrLooser(user.getUsername(), user.getUsername());
-        lastGamesList = lastGamesList.stream().limit(10).collect(Collectors.toList());
+        List<Game> currentGames = games.findByWhitePlayerOrBlackPlayerAndIsFinish(user, user, false);
+        currentGames.removeIf(Game::getFinish);
+
+        List<Game> lastGames = games.findByWhitePlayerOrBlackPlayerAndIsFinish(user, user, true);
 
         User u = users.findByUsername(user.getUsername());
         u.setPlaying(false);
@@ -53,8 +54,8 @@ public class IndexController {
         model.addAttribute("friends", friends);
         model.addAttribute("game_requests", gameRequests.findAllByReceiverAndIsAccepted(user, false));
         model.addAttribute("pending_game_requests", gameRequests.findAllBySenderAndIsAccepted(user, false));
-        model.addAttribute("last_10_games", lastGamesList);
-        model.addAttribute("games", currentGameList);
+        model.addAttribute("last_games", lastGames);
+        model.addAttribute("games", currentGames);
         return "index";
     }
 }

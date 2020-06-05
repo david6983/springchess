@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
-    List<Game> findByWhitePlayerOrBlackPlayer(User white, User black);
+    List<Game> findByWhitePlayerOrBlackPlayerAndIsFinish(User white, User black, Boolean isFinish);
 }
