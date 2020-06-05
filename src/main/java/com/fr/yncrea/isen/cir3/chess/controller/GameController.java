@@ -58,9 +58,6 @@ public class GameController {
         Optional<User> black = users.findById(blackUserId);
 
         if (white.isPresent() && black.isPresent()) {
-            System.out.println(white.get().getUsername());
-            System.out.println(black.get().getUsername());
-
             if (white.get().getLogIn() && black.get().getLogIn()) {
                 black.get().setPlaying(true);
                 users.save(black.get());
@@ -80,9 +77,10 @@ public class GameController {
                 g.setBlackPlayer(black.get());
                 g.setWhitePlayer(white.get());
                 g.setEchec(0);
+                g.setPause(false);
                 // initialize the times
-                // g.setGameTime();
-                //g.setTimeCurrentPlayer(System.currentTimeMillis());
+                g.setGameTime();
+                g.setTimeCurrentPlayer(System.currentTimeMillis());
 
                 games.save(g);
 
@@ -111,6 +109,10 @@ public class GameController {
     ) {
         Optional<Game> game = games.findById(id);
         if (game.isPresent()) {
+            if (game.get().getWhitePlayer().getPlaying() && game.get().getBlackPlayer().getPlaying()) {
+                game.get().setPause(false);
+            }
+
             model.addAttribute("game", game.get());
             model.addAttribute("user_index", (game.get().getBlackPlayer().getUsername().equals(currentUser.getUsername())) ? 1 : 0);
             model.addAttribute("user", currentUser);

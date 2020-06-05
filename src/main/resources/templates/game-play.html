@@ -22,7 +22,10 @@
                 (<span th:text="${game.getNumberOfPlay(0)}">0</span> moves)
             </li>
             <li>Total elapsed time : <span id="time" th:text="${time}">1</span> s</li>
-            <li>Move elapsed time : <span id="time_move" th:text="${time_move}">1</span> s</li>
+            <li>Move of <span th:text="${game.getCurrentUser().getUsername()}"></span> elapsed time : <span id="time_move" th:text="${time_move}">1</span> s</li>
+            <li>Game status :
+                <span id="game_status" th:text="${(game.getPause() or game.getFinish()) ? 'on break' : 'in progress'}" th:classappend="${(game.getPause() or game.getFinish()) ? 'text-danger' : 'text-success'}"></span>
+            </li>
         </ul>
         <h4 class="Timer"></h4>
         <h4 th:if="${!mate}">

@@ -6,6 +6,11 @@ import java.util.List;
 
 @Entity
 public class Game {
+    /**
+     * to convert the time from milliseconds to seconds.
+     */
+    private static final int S_CONVERT = 1000;
+
     public static final int NUMBER_OF_PLAYER_IN_GAME = 2;
 
     public static final int START_PLAYER = PlayerName.WHITE.ordinal();
@@ -285,5 +290,13 @@ public class Game {
         } else {
             return blackPlayer;
         }
+    }
+
+    public Long getTimeElapsed(final Long time) {
+        if (time == null) {
+            return 0L;
+        }
+
+        return (System.currentTimeMillis() - time) / S_CONVERT;
     }
 }

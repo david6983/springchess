@@ -297,6 +297,7 @@ public class ChessGameService {
                 for (int j = 0; j < Game.WIDTH; j++) {
                     if (game.getFigureAt(i, j) != null && game.getFigureAt(i, j).getOwner() != player) {
                         if (response) {
+                            System.out.println("checkEchec true");
                             return true;
                         } else
                             response = checkAny(game, game.getFigureAt(i, j), xKing, yKing);

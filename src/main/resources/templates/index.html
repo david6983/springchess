@@ -15,7 +15,6 @@
                 <h6 th:text="${user.getEmail()}" class="card-subtitle mb-2 text-muted">moumou.rad@gmail.com</h6>
                 <h6 th:text="Player" class="card-subtitle mb-2 text-muted">Player</h6>
                 <a th:href="@{/logout}" href="#" class="card-link">Log out</a>
-                <a href="#" class="card-link text-danger">Delete my account</a>
             </div>
         </div>
         <h2 class="mt-4 mb-4">Current games</h2>
@@ -164,7 +163,7 @@
                     <th scope="row" th:text="${custStat.count}">1</th>
                     <td th:text="${lg.getUserWinner().getUsername()}" th:classappend="${lg.getUserWinner().getUsername() == user.getUsername() ? 'text-success' : ''}">Mark</td>
                     <td th:text="${lg.getUserLooser().getUsername()}" th:classappend="${lg.getUserLooser().getUsername() == user.getUsername() ? 'text-danger' : ''}">Otto</td>
-                    <td th:text="${lg.getGameTime()}"></td>
+                    <td th:text="|${lg.getTimeElapsed(lg.getGameTime())} s|"></td>
                 </tr>
             </tbody>
         </table>

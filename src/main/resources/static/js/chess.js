@@ -5,12 +5,15 @@ console.log("started javascript loading");
 $(document).ready(function() {
     let counterGame = parseInt($("#time")[0].innerText);
     let counterMove = parseInt($("#time_move")[0].innerText);
+    let status = $("#game_status")[0].innerText;
     let interval = setInterval(function() {
-        counterGame++;
-        counterMove++;
+        if (status === "in progress") {
+            counterGame++;
+            counterMove++;
 
-        $('#time').text(counterGame);
-        $('#time_move').text(counterMove);
+            $('#time').text(counterGame);
+            $('#time_move').text(counterMove);
+        }
     }, 1000);
 });
 

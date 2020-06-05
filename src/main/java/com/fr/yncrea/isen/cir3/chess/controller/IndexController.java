@@ -49,6 +49,12 @@ public class IndexController {
         u.setLogIn(true);
         users.save(u);
 
+        // pause all the games
+        for (Game g: currentGames) {
+            g.setPause(true);
+        }
+        games.saveAll(currentGames);
+
         model.addAttribute("user", user);
         model.addAttribute("friend_requests", friendRequests.findAllByReceiverAndIsAccepted(user, false));
         model.addAttribute("friends", friends);
