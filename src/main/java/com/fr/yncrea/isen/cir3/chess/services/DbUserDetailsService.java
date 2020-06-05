@@ -34,7 +34,7 @@ public class DbUserDetailsService implements UserDetailsService {
     public UserForm createForm(User user) {
         UserForm form = new UserForm();
         if (user == null) {
-            return null;
+            return form;
         }
 
         form.setId(user.getId());

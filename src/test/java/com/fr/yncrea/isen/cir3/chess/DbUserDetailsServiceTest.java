@@ -37,7 +37,7 @@ public class DbUserDetailsServiceTest {
     public void createFormNullTest() {
         UserForm result = service.createForm(null);
 
-        assertThat(result).isNull();
+        assertThat(result).isNotNull();
     }
 
     @Test
