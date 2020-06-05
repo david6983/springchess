@@ -325,8 +325,73 @@ public class ChessGameServiceTest {
 
     @Test
     public void findKingTest() {
+        for(long i = 0; i < 8; i++){
+            for(long j = 0; j <  8; j++) {
+                if(game.getFigureAt((int)i, (int)j) != null)
+                    game.getFigureAt((int)i,(int)j).setId(i+j);
+            }
+        }
         service.findKing(game);
-        assertThat(game.getWhiteKingId()).isNotEqualTo("null");
-        assertThat(game.getBlackKingId()).isNotEqualTo("null");
+        assertThat(game.getWhiteKingId()).isNotNull();
+        assertThat(game.getBlackKingId()).isNotNull();
     }
+
+    @Test
+    public void checkEchecTest(){
+        for(long i = 0; i < 8; i++){
+            for(long j = 0; j <  8; j++) {
+                if(game.getFigureAt((int)i, (int)j) != null)
+                    game.getFigureAt((int)i,(int)j).setId(i+j);
+            }
+        }
+        service.findKing(game);
+
+        // White king
+        Figure k1 = game.getFigureAt(4,7);
+                k1.setY(2);
+        assertThat(k1).isNotNull();
+        game.setCurrentPlayer(0);
+
+        assertThat(service.checkEchec(game)).isTrue();
+
+        k1.setY(3);
+        assertThat(service.checkEchec(game)).isFalse();
+
+        // Black king
+        game.setCurrentPlayer(1);
+        k1.setY(2);
+        assertThat(service.checkEchec(game)).isTrue();
+
+        k1.setY(4);
+        assertThat(service.checkEchec(game)).isFalse();
+    }
+    @Test
+    public void checkMateTest(){
+        for(long i = 0; i < 8; i++){
+            for(long j = 0; j <  8; j++) {
+                if(game.getFigureAt((int)i, (int)j) != null)
+                    game.getFigureAt((int)i,(int)j).setId(i+j);
+            }
+        }
+        service.findKing(game);
+
+        // White King
+        Figure k1 = game.getFigureAt(4,7);
+        k1.setY(2);
+        assertThat(k1).isNotNull();
+        game.setCurrentPlayer(1);
+        assertThat(service.checkMate(game)).isTrue();
+
+        k1.setY(3);
+        assertThat(service.checkMate(game)).isFalse();
+
+        // Black king
+        game.setCurrentPlayer(0);
+        k1.setY(2);
+        assertThat(service.checkMate(game)).isTrue();
+
+        k1.setY(4);
+        assertThat(service.checkMate(game)).isFalse();
+    }
+
 }
