@@ -4,6 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "chess_user")
@@ -25,8 +26,22 @@ public class User implements UserDetails {
     @Transient
     private String confirmPassword;
 
+    @Column
+    private Boolean isLogIn = false;
+
+    @Column
+    private Boolean isPlaying = false;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Authority> authorities;
+
+    public Boolean getLogIn() {
+        return isLogIn;
+    }
+
+    public void setLogIn(Boolean logIn) {
+        isLogIn = logIn;
+    }
 
     public Long getId() {
         return id;
@@ -36,6 +51,7 @@ public class User implements UserDetails {
         this.id = id;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
@@ -94,5 +110,13 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(Boolean playing) {
+        isPlaying = playing;
     }
 }

@@ -1,5 +1,19 @@
 console.log("started javascript loading");
 
+// time elapsed
+
+$(document).ready(function() {
+    let counterGame = parseInt($("#time")[0].innerText);
+    let counterMove = parseInt($("#time_move")[0].innerText);
+    let interval = setInterval(function() {
+        counterGame++;
+        counterMove++;
+
+        $('#time').text(counterGame);
+        $('#time_move').text(counterMove);
+    }, 1000);
+});
+
 // board component
 let board = $("#board");
 
@@ -9,7 +23,9 @@ let board = $("#board");
  */
 $(function (e) {
     // replace text for the player's turn.
-    const turnText = $('#player-turn').html();
+    let turnText = "Unknow";
+    if ($('#mate').html() == null && $('#winner').html() == null)
+        turnText = $('#player-turn').html();
 
     $('.figure').draggable({
         containment: board,
@@ -73,9 +89,29 @@ if ($(location).attr('href').split('/')[4] === "promote") {
     $('#promotionModal').modal('toggle');
 }
 
+$(function () {
+    if ($('#mate').html() != null && $('#winner').html() == null) {
+        let currentPlayer = $('#player-turn').html();
+        let winner = (currentPlayer === "Black" ? $('#Player1').text() : $('#Player2').text());
+        let looser = (currentPlayer === "Black" ? $('#Player2').text() : $('#Player1').text());
+        let gameId = $(location).attr('href').split('/')[5]; // http://localhost:8080/game/play/{id}
+        window.location.href = '/game/endgame/' + gameId + '/' + winner + '/' + looser;
+    }
+});
+
+
 function leaveGame() {
     let gameId = $(location).attr('href').split('/')[5]; // http://localhost:8080/game/play/{id}
-    window.location.href = '/game/resigning/' + gameId;
+    let looser = $('#leave').attr('data-id');
+    let winner;
+
+    if($('#Player1').text() === looser) {
+        winner = $('#Player2').text();
+    }
+    else {
+        winner = $('#Player1').text();
+    }
+    window.location.href = '/game/endgame/' + gameId + '/' + winner + '/' + looser;
 }
 
 console.log("js fully loaded");

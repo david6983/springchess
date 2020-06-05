@@ -15,6 +15,11 @@ import java.util.List;
 @Service
 public class ChessGameService {
     /**
+     * to convert the time from milliseconds to seconds.
+     */
+    private static final int S_CONVERT = 1000;
+
+    /**
      * logger.
      */
     private Logger logger = LoggerFactory.getLogger(ChessGameService.class);
@@ -331,4 +336,17 @@ public class ChessGameService {
         return false;
     }
 
+    /**
+     * compute the elapsed time in seconds between the current time and the
+     * time in database.
+     * @param time value of the time in millisecond
+     * @return time elapsed in seconds
+     */
+    public Long getTimeElapsed(final Long time) {
+        if (time == null) {
+            return 0L;
+        }
+
+        return (System.currentTimeMillis() - time) / S_CONVERT;
+    }
 }

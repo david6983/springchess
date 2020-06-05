@@ -2,6 +2,7 @@ package com.fr.yncrea.isen.cir3.chess.services;
 
 import com.fr.yncrea.isen.cir3.chess.domain.User;
 import com.fr.yncrea.isen.cir3.chess.form.UserForm;
+import com.fr.yncrea.isen.cir3.chess.repository.AuthorityRepository;
 import com.fr.yncrea.isen.cir3.chess.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +15,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 @Service
 public class DbUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository users;
+
+    @Autowired
+    private AuthorityRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -42,7 +49,7 @@ public class DbUserDetailsService implements UserDetailsService {
         user.setUsername(userForm.getUsername());
         user.setEmail(userForm.getEmail());
         user.setPassword(passwordEncoder.encode(userForm.getPassword()));
-
+        user.setAuthorities(Collections.singletonList(roleRepository.findByAuthority("ROLE_USER")));
         users.save(user);
     }
 
