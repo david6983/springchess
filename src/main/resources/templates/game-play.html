@@ -35,8 +35,8 @@
         <span id="player-turn" th:text="${game.getCurrentPlayer() == 1 ? 'Black' : 'White'}" style="display: none;">Black</span>
         <h5 th:text="${error_msg}" class="alert-message">A message appear !</h5>
     </div>
-    <h3 th:if="${game.getEchec() == 1 && !(mate)}" class="text-center">Échecs au Roi</h3>
-    <h3 th:if="${mate}" class="text-center" id="mate">ECHEC ET MATE</h3>
+    <h3 th:if="${game.getEchec() == 1 && !(mate)}" class="text-center text-danger">CHECK</h3>
+    <h3 th:if="${mate}" class="text-center" id="mate">CHECKMATE</h3>
     <h2 th:if="${gameList}" class="text-center" id="winner">Winner is <span th:text="${gameList.getWinner()}" >Player 1</span></h2>
     <div class="flex-container">
         <table id="board">
