@@ -170,11 +170,15 @@ public class ChessGameService {
                 if(pawn.getX() - nx > 0 ) {
                     // verify the opposite pawn played only once and it position is on the right of the pawn
                     oppositePawn = game.getFigureAt(pawn.getX() - 1, pawn.getY());
-                }else{
+                }else if(pawn.getX() - nx < 0 ) {
                     oppositePawn = game.getFigureAt(pawn.getX() + 1, pawn.getY());
                 }
 
-                return oppositePawn.getOwner() == (1 - player) && oppositePawn.getCountPlayed() == 1;
+                if (oppositePawn != null) {
+                    return oppositePawn.getOwner() == (1 - player) && oppositePawn.getCountPlayed() == 1;
+                } else {
+                    return false;
+                }
             }
         }
 
@@ -304,9 +308,12 @@ public class ChessGameService {
     }
 
     //TODO checkLifeSaver()
-//    public Boolean checkLifeSaver(Game game, Long id, int dx, int dy) {
-//
-//    }
+    /*
+    public Boolean checkLifeSaver(Game game, Long id, int dx, int dy) {
+        int x = game.getFigureById(id).getX();
+        int y = game.getFigureById(id).getY();
+        return dx == x && dy == y;
+    }*/
 
     public Boolean checkMate(Game game) {
         if (game.getFigureById(game.getWhiteKingId()) != null && game.getFigureById(game.getBlackKingId()) != null) {

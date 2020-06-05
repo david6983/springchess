@@ -8,7 +8,7 @@
     <h1 class="text-center">You are <span th:text="${user.getUsername()}"></span></h1>
     <h6 class="text-danger text-center">Refresh the page to update the other player moves</h6>
     <div class="container-fluid">
-        <button type="button" class="btn btn-dark" id="leave" data-toggle="modal" data-target="#LeaveGame">Leave
+        <button type="button" class="btn btn-dark" id="leave" th:attr="data-id=${user.getUsername()}" data-toggle="modal" data-target="#LeaveGame">Leave
         </button>
         <h2>Game <span th:text="${game.getId()}"></span></h2>
         <ul>

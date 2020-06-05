@@ -11,8 +11,8 @@
             <input type="hidden" th:field="*{sender}" />
             <div th:if="${!users.isEmpty()}" class="form-group">
                 <label for="name">Select his or her username</label>
-                <select th:each="user: ${users}" name="name" th:field="*{username}" id="name" class="form-control">
-                    <option th:value="${user.getUsername()}" th:text="${user.getUsername()}"></option>
+                <select  name="name" th:field="*{username}" id="name" class="form-control">
+                    <option th:each="user: ${users}" th:value="${user.getUsername()}" th:text="${user.getUsername()}"></option>
                 </select>
             </div>
             <div class="font-weight-bold text-center mb-5 mt-5" th:if="${users.isEmpty()}">No new player to add, come back later !</div>
