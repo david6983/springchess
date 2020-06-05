@@ -4,13 +4,10 @@ import com.fr.yncrea.isen.cir3.chess.domain.Figure;
 import com.fr.yncrea.isen.cir3.chess.domain.FigureName;
 import com.fr.yncrea.isen.cir3.chess.domain.Game;
 import com.fr.yncrea.isen.cir3.chess.services.ChessGameService;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChessGameServiceTest {
     private ChessGameService service;
