@@ -34,7 +34,7 @@ public class DbUserDetailsService implements UserDetailsService {
     public UserForm createForm(User user) {
         UserForm form = new UserForm();
         if (user == null) {
-            return form;
+            return null;
         }
 
         form.setId(user.getId());
@@ -60,17 +60,5 @@ public class DbUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("user not found with the corresponding email");
         }
         return user;
-    }
-
-    public void autoLogin(String username, String password) {
-        UserDetails userDetails = loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password);
-
-        //authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-
-        if (usernamePasswordAuthenticationToken.isAuthenticated()) {
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            logger.debug(String.format("Auto login %s successfully!", username));
-        }
     }
 }

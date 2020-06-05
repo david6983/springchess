@@ -42,8 +42,6 @@ public class UserController {
         userService.save(form);
         logger.info("successfully created user, need to register it in database");
 
-        //userService.autoLogin(form.getUsername(), form.getPassword());
-
         return "redirect:/login";
     }
 }
