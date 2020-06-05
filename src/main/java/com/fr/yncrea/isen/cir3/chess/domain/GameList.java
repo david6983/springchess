@@ -22,7 +22,6 @@ public class GameList {
     @Column
     private Long gameId;
 
-
     public Long getId() {
         return id;
     }

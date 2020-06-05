@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/game")
@@ -71,6 +72,11 @@ public class GameController {
                 moves.deleteAll();
                 // create a game
                 Game g = new Game();
+                // randomize which player start
+                Random rand = new Random();
+                int randomValue = rand.nextInt() % 2;
+                g.setCurrentPlayer(randomValue);
+                // add the players
                 g.setBlackPlayer(black.get());
                 g.setWhitePlayer(white.get());
 

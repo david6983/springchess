@@ -156,6 +156,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Winner</th>
                 <th scope="col">Looser</th>
+                <th scope="col">Time</th>
             </tr>
             </thead>
             <tbody>
@@ -163,6 +164,7 @@
                     <th scope="row" th:text="${lg.getId()}">1</th>
                     <td th:text="${lg.getWinner()}" th:classappend="${lg.getWinner() == user.getUsername() ? 'text-success' : ''}">Mark</td>
                     <td th:text="${lg.getLooser()}" th:classappend="${lg.getLooser() == user.getUsername() ? 'text-danger' : ''}">Otto</td>
+                    <td><span>1000</span> s</td>
                 </tr>
             </tbody>
         </table>
