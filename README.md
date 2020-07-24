@@ -16,7 +16,7 @@ GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO springchess;
 or
 
 ```
-sudo psql -f northwind.sql -U postgres
+sudo psql -f test.sql -U postgres
 ```
 
 # launch project
